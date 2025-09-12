@@ -1,0 +1,95 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'main';
+  src: url('/fonts/ReadexPro-ExtraLight.ttf') format('truetype');
+  font-weight: 200; /* extra-light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'main';
+  src: url('/fonts/ReadexPro-Light.ttf') format('truetype');
+  font-weight: 300; /* light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'main';
+  src: url('/fonts/ReadexPro-Regular.ttf') format('truetype');
+  font-weight: 400; /* regular */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'main';
+  src: url('/fonts/ReadexPro-Medium.ttf') format('truetype');
+  font-weight: 500; /* medium */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'main';
+  src: url('/fonts/ReadexPro-SemiBold.ttf') format('truetype');
+  font-weight: 600; /* semibold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'main';
+  src: url('/fonts/ReadexPro-Bold.ttf') format('truetype');
+  font-weight: 700; /* bold */
+  font-style: normal;
+}
+
+@theme {
+  --color-main: #aa60c8;
+  --color-main-background: #efefef;
+  --color-second-background: #ffffff;
+  --color-reverse-background: #000000;
+  --color-main-hover: #c672e8;
+  --color-nav-hover: #d7bfe0;
+  --color-main-text: #000000;
+  --color-main-text-helper: #908d91;
+  --color-text-secondary: #efefef;
+  --color-error: #e00000;
+  --color-disabled: #ddc3e8;
+  --font-main: main, 'sans-serif';
+  --radius-level-s: 4px;
+  --radius-level1: 12px;
+  --radius-level2: 32px;
+}
+
+[data-theme='dark'] {
+  --color-main: #bb8dce;
+  --color-main-background: #333333;
+  --color-second-background: #121212;
+  --color-reverse-background: #ffffff;
+  --color-main-hover: #c672e8;
+  --color-nav-hover: #4e1264;
+
+  --color-main-text: #ffffff;
+  --color-main-text-helper: #e0dee0;
+  --color-text-secondary: #333333;
+  --color-error: #e00000;
+  --color-disabled: #ddc3e8;
+}
+
+*:disabled {
+  cursor: not-allowed;
+}
+
+html,
+body {
+  background-color: var(--color-main-background);
+  font-family: var(--font-main);
+  color: var(--color-main-text);
+  overflow-x: hidden;
+}
+
+@layer base {
+  .container {
+    @apply mx-auto px-[16px]; /* always centered + horizontal padding */
+  }
+}
+

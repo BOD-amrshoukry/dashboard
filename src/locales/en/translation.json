@@ -1,0 +1,89 @@
+{
+  "settings": {
+    "text": {
+      "changeLanguage": "Change Language",
+      "changeTheme": "Change Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "changeLanguageModalDescription": "Are you wure you want to change the language to {{lang}}?",
+      "changeThemeModalDescription": "Are you wure you want to change the theme to {{theme}}?"
+    },
+    "success": {
+      "languageChange": "Language changed successfully!",
+      "themeChange": "Theme changed successfully!"
+    }
+  },
+  "general": {
+    "text": {
+      "change": "Change",
+      "cancel": "Cancel",
+      "submit": "Submit"
+    },
+    "pending": {
+      "submitting": "Submitting..."
+    }
+  },
+  "auth": {
+    "text": {
+      "login": "Login",
+      "loginDescription": "Enter your details to access your dashboard",
+      "email": "Email",
+      "password": "Password",
+      "passwordConfirmation": "Password Confirmation",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password",
+      "passwordConfirmationPlaceholder": "Confirm your password",
+      "rememberMe": "Remember Me",
+      "forgetPassword": "Forget Password",
+      "forgetPasswordDescription": "Enter your email to restore your password",
+      "emailSent": "Email Sent!",
+      "emailSentDescription": "An Email has been sent successfully. Please check your mail for more instructions!",
+      "backLogin": "Back to login page",
+      "resetPassword": "Reset Password",
+      "resetPasswordDescription": "Enter your new password to access your dashboard",
+      "reset": "Reset",
+      "accountVerified": "Account Verified!",
+      "accountVerifiedDescription": "Your account has been verified successfully. Please reset your password to be able to login!",
+      "backReset": "Back to reset your password!"
+    },
+    "errors": {
+      "email": "Invalid Email",
+      "password": "Password must be at least 6 characters",
+      "confirmationPassword": "Confirmation Password must be the same as password",
+      "login": "Invalid credentials!",
+      "forgetPassword": "This email doesn't exist in our database!",
+      "resetPassword": "Couldn't reset password currently!"
+    },
+    "pending": {
+      "logging": "Logging in...",
+      "reseting": "Reseting..."
+    },
+    "success": {
+      "login": "Logged in successfully!",
+      "forgetPassword": "Email send successfully!",
+      "resetPassword": "Password has been reset successfully!"
+    }
+  },
+  "notFound": {
+    "text": {
+      "head": "Page not found!",
+      "description": "The page you are looking for doesn't exist!",
+      "backHome": "Back to home page"
+    }
+  },
+  "navbar": {
+    "text": {
+      "employees": "Employees",
+      "managers": "Managers",
+      "help": "Help",
+      "notifications": "Notifications",
+      "profile": "Profile",
+      "settings": "Settings",
+      "dashboard": "Dashboard",
+      "tickets": "Tickets",
+      "logout": "Logout",
+      "logo": "ShoukryBoard"
+    }
+  }
+}
+
