@@ -1,11 +1,15 @@
 import React from 'react';
 import DashboardLayout from '../../../shared/layouts/dashboard-layout';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
+import { useTranslation } from 'react-i18next';
 
 const DashboardPage = () => {
+  const { t } = useTranslation();
+  const data = [{ label: t('navbar.text.dashboard'), href: '/dashboard' }];
+
   return (
     <>
-      <DashboardTopBar></DashboardTopBar>
+      <DashboardTopBar breadcrumb={data}></DashboardTopBar>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
         quibusdam dolores possimus dolorem aut minus, illum odio laudantium

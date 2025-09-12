@@ -2,25 +2,31 @@
   "settings": {
     "text": {
       "changeLanguage": "تغيير اللغة",
-      "changeTheme": "تغيير السمة",
+      "changeTheme": "تغيير النمط",
       "light": "فاتح",
       "dark": "داكن",
       "changeLanguageModalDescription": "هل أنت متأكد أنك تريد تغيير اللغة إلى {{lang}}؟",
-      "changeThemeModalDescription": "هل أنت متأكد أنك تريد تغيير السمة إلى {{theme}}؟"
+      "changeThemeModalDescription": "هل أنت متأكد أنك تريد تغيير النمط إلى {{theme}}؟"
     },
     "success": {
       "languageChange": "تم تغيير اللغة بنجاح!",
-      "themeChange": "تم تغيير السمة بنجاح!"
+      "themeChange": "تم تغيير النمط بنجاح!"
     }
   },
   "general": {
     "text": {
       "change": "تغيير",
       "cancel": "إلغاء",
-      "submit": "إرسال"
+      "submit": "إرسال",
+      "update": "تحديث",
+      "delete": "حذف",
+      "confirm": "تأكيد"
     },
     "pending": {
-      "submitting": "جارٍ الإرسال..."
+      "submitting": "جاري الإرسال...",
+      "updating": "جاري التحديث...",
+      "deleting": "جاري الحذف...",
+      "confirming": "جاري التأكيد..."
     }
   },
   "auth": {
@@ -36,32 +42,80 @@
       "rememberMe": "تذكرني",
       "forgetPassword": "نسيت كلمة المرور",
       "forgetPasswordDescription": "أدخل بريدك الإلكتروني لاستعادة كلمة المرور",
-      "emailSent": "تم إرسال البريد الإلكتروني!",
-      "emailSentDescription": "تم إرسال البريد الإلكتروني بنجاح. يرجى التحقق من بريدك للحصول على المزيد من التعليمات!",
+      "emailSent": "تم إرسال البريد!",
+      "emailSentDescription": "تم إرسال بريد إلكتروني بنجاح. يرجى التحقق من بريدك للحصول على المزيد من التعليمات!",
       "backLogin": "العودة إلى صفحة تسجيل الدخول",
       "resetPassword": "إعادة تعيين كلمة المرور",
       "resetPasswordDescription": "أدخل كلمة المرور الجديدة للوصول إلى لوحة التحكم",
       "reset": "إعادة تعيين",
-      "accountVerified": "تم التحقق من الحساب!",
-      "accountVerifiedDescription": "تم التحقق من حسابك بنجاح. يرجى إعادة تعيين كلمة المرور لتتمكن من تسجيل الدخول!",
-      "backReset": "العودة لإعادة تعيين كلمة المرور!"
+      "accountVerified": "تم تفعيل الحساب!",
+      "accountVerifiedDescription": "تم تفعيل حسابك بنجاح. يرجى إعادة تعيين كلمة المرور لتتمكن من تسجيل الدخول!",
+      "backReset": "العودة لإعادة تعيين كلمة المرور"
     },
     "errors": {
-      "email": "البريد الإلكتروني غير صالح",
+      "email": "بريد إلكتروني غير صالح",
       "password": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
-      "confirmationPassword": "تأكيد كلمة المرور يجب أن يكون مطابقًا لكلمة المرور",
-      "login": "بيانات اعتماد غير صالحة!",
-      "forgetPassword": "هذا البريد الإلكتروني غير موجود في قاعدة البيانات لدينا!",
-      "resetPassword": "لا يمكن إعادة تعيين كلمة المرور حاليًا!"
+      "confirmationPassword": "يجب أن تكون كلمة التأكيد مطابقة لكلمة المرور",
+      "login": "بيانات الدخول غير صحيحة!",
+      "forgetPassword": "هذا البريد غير موجود في قاعدة البيانات!",
+      "resetPassword": "تعذر إعادة تعيين كلمة المرور حالياً!"
     },
     "pending": {
-      "logging": "جارٍ تسجيل الدخول...",
-      "reseting": "جارٍ إعادة التعيين..."
+      "logging": "جاري تسجيل الدخول...",
+      "reseting": "جاري إعادة التعيين..."
     },
     "success": {
       "login": "تم تسجيل الدخول بنجاح!",
-      "forgetPassword": "تم إرسال البريد الإلكتروني بنجاح!",
-      "resetPassword": "تم إعادة تعيين كلمة المرور بنجاح!"
+      "forgetPassword": "تم إرسال البريد بنجاح!",
+      "resetPassword": "تمت إعادة تعيين كلمة المرور بنجاح!"
+    }
+  },
+  "notFound": {
+    "text": {
+      "head": "الصفحة غير موجودة!",
+      "description": "الصفحة التي تبحث عنها غير موجودة!",
+      "backHome": "العودة إلى الصفحة الرئيسية"
+    }
+  },
+  "navbar": {
+    "text": {
+      "employees": "الموظفون",
+      "managers": "المديرون",
+      "help": "المساعدة",
+      "notifications": "الإشعارات",
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات",
+      "dashboard": "لوحة التحكم",
+      "tickets": "التذاكر",
+      "logout": "تسجيل الخروج",
+      "logo": "لوحة شكري"
+    }
+  },
+  "profile": {
+    "text": {
+      "name": "الاسم",
+      "namePlaceholder": "أدخل اسمك",
+      "userType": "نوع المستخدم:",
+      "employee": "موظف",
+      "manager": "مدير",
+      "admin": "مسؤول",
+      "previewImage": "معاينة صورتك الجديدة",
+      "deleteImageHead": "حذف الصورة",
+      "deleteImageDescription": "هل أنت متأكد أنك تريد حذف صورتك؟",
+      "deleteImage": "حذف الصورة",
+      "updateImage": "تحديث الصورة"
+    },
+    "errors": {
+      "name": "اسم غير صالح",
+      "update": "خطأ أثناء تحديث البيانات",
+      "load": "فشل في تحميل بيانات المستخدم",
+      "imageUpdate": "فشل في تحديث صورتك!",
+      "imageDelete": "فشل في حذف صورتك!"
+    },
+    "success": {
+      "update": "تم تحديث بياناتك بنجاح!",
+      "imageUpdate": "تم حفظ صورتك بنجاح!",
+      "imageDelete": "تم حذف صورتك بنجاح!"
     }
   }
 }

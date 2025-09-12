@@ -17,7 +17,7 @@ const SettingsData = ({ setIsOpenModal, setModalData, isAuth = false }) => {
         <div
           className={clsx(
             'flex',
-            isAuth ? ' gap-[16px]' : ' flex-col gap-[8px]',
+            isAuth ? 'flex-col sm:flex-row gap-[16px]' : ' flex-col gap-[8px]',
           )}>
           <Button
             className={'w-full'}
@@ -60,7 +60,7 @@ const SettingsData = ({ setIsOpenModal, setModalData, isAuth = false }) => {
         <div
           className={clsx(
             'flex',
-            isAuth ? ' gap-[16px]' : ' flex-col gap-[8px]',
+            isAuth ? 'flex-col sm:flex-row gap-[16px]' : ' flex-col gap-[8px]',
           )}>
           <Button
             className={'w-full'}

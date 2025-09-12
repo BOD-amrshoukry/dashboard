@@ -1,5 +1,7 @@
+import clsx from 'clsx';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +11,8 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === 'rtl';
 
   return (
     <>
@@ -23,7 +27,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           onClick={(e) => e.stopPropagation()}>
           {/* Close button */}
           <button
-            className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+            className={clsx(
+              'absolute top-3  text-gray-500 hover:text-gray-800',
+              isRTL ? 'left-3' : 'right-3',
+            )}
             onClick={onClose}>
             ✕
           </button>

@@ -23,7 +23,7 @@ const SettingsModal = ({ modalData, setIsOpenModal, isOpenModal }) => {
     <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
       <h2 className="text-xl font-bold mb-4">{modalData?.head}</h2>
       <p>{modalData?.description}</p>
-      <div className="flex gap-[16px] mt-[24px]">
+      <div className="flex gap-[16px] mt-[24px] flex-col sm:flex-row">
         <Button
           onClick={() => setIsOpenModal(false)}
           className={'w-full'}
@@ -45,3 +45,4 @@ const SettingsModal = ({ modalData, setIsOpenModal, isOpenModal }) => {
 };
 
 export default SettingsModal;
+

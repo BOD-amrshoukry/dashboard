@@ -8,6 +8,7 @@ import VerifiedPage from '../../features/auth/pages/verified';
 import NotFound from '../../shared/pages/not-found';
 import SettingsPage from '../../features/dashboard/pages/settings-page';
 import DashboardLayout from '../../shared/layouts/dashboard-layout';
+import ProfilePage from '../../features/profile/pages/profile-page';
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Route>

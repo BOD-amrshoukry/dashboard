@@ -50,6 +50,7 @@
   --color-main-hover: #c672e8;
   --color-nav-hover: #d7bfe0;
   --color-main-text: #000000;
+  --color-main-text-hover: #222222;
   --color-main-text-helper: #908d91;
   --color-text-secondary: #efefef;
   --color-error: #e00000;
@@ -69,6 +70,8 @@
   --color-nav-hover: #4e1264;
 
   --color-main-text: #ffffff;
+  --color-main-text-hover: #dddddd;
+
   --color-main-text-helper: #e0dee0;
   --color-text-secondary: #333333;
   --color-error: #e00000;
@@ -77,6 +80,10 @@
 
 *:disabled {
   cursor: not-allowed;
+}
+
+button {
+  cursor: pointer;
 }
 
 html,

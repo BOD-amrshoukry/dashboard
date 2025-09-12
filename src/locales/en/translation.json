@@ -17,10 +17,16 @@
     "text": {
       "change": "Change",
       "cancel": "Cancel",
-      "submit": "Submit"
+      "submit": "Submit",
+      "update": "Update",
+      "delete": "Delete",
+      "confirm": "Confirm"
     },
     "pending": {
-      "submitting": "Submitting..."
+      "submitting": "Submitting...",
+      "updating": "Updating...",
+      "deleting": "Deleting...",
+      "confirming": "Confirming..."
     }
   },
   "auth": {
@@ -83,6 +89,33 @@
       "tickets": "Tickets",
       "logout": "Logout",
       "logo": "ShoukryBoard"
+    }
+  },
+  "profile": {
+    "text": {
+      "name": "Name",
+      "namePlaceholder": "Enter your name",
+      "userType": "User Type:",
+      "employee": "Employee",
+      "manager": "Manager",
+      "admin": "Admin",
+      "previewImage": "Preview your new image",
+      "deleteImageHead": "Delete Image",
+      "deleteImageDescription": "Are you sure you want to delete your image?",
+      "deleteImage": "Delete Image",
+      "updateImage": "Update Image"
+    },
+    "errors": {
+      "name": "Invalid Name",
+      "update": "Error on updating the data",
+      "load": "Failed to load user's data",
+      "imageUpdate": "Failed to update your image!",
+      "imageDelete": "Failed to delete your image!"
+    },
+    "success": {
+      "update": "Your data has been updated successfully!",
+      "imageUpdate": "Your image has been saved successfully!",
+      "imageDelete": "Your image has been deleted successfully!"
     }
   }
 }

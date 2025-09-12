@@ -24,3 +24,17 @@ export function setCookie(
   )}${expires}; path=${path}`;
 }
 
+export function deleteCookie(name: string, path: string = '/') {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path};`;
+}
+
+export function decodeJwt(token: string) {
+  try {
+    const payload = token.split('.')[1]; // the middle part
+    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(decoded);
+  } catch {
+    return null;
+  }
+}
+

@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { deleteCookie } from '../utils/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import useUser from '../hooks/use-user';
+import DataDisplay from './data-display';
+import { BASE_URL } from '../constants/api';
 
 const UserDetailsSidebar = ({ isMobile }) => {
   const [popupOpen, setPopupOpen] = useState(false);
@@ -9,6 +14,7 @@ const UserDetailsSidebar = ({ isMobile }) => {
   const popupRef = useRef(null);
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
+  const navigate = useNavigate();
 
   // Close popup if clicked outside
   useEffect(() => {
@@ -35,6 +41,13 @@ const UserDetailsSidebar = ({ isMobile }) => {
     setPopupOpen(true);
   };
 
+  const handleLogout = () => {
+    deleteCookie('token');
+    navigate('/login');
+  };
+
+  const { data, isPending, isError } = useUser();
+
   return (
     <>
       <div className="px-[8px] transition">
@@ -42,13 +55,34 @@ const UserDetailsSidebar = ({ isMobile }) => {
           className="flex px-[8px] bg-main-background hover:bg-second-background transition-[0.5s]  w-full rounded-level1 py-[8px] mb-[8px] cursor-pointer gap-[12px] items-center"
           ref={triggerRef}
           onClick={handleOpenPopup}>
-          <div className="rounded-level1 h-[48px] w-[48px] bg-main text-second-background flex justify-center items-center font-bold text-[20px]">
-            AS
-          </div>
-          <div className="flex flex-col">
-            <p className="text-[16px]">Amr Shoukry</p>
-            <p className="text-[12px]">Employee</p>
-          </div>
+          <DataDisplay
+            data={data}
+            isLoading={isPending}
+            error={isError ? t('profile.errors.load') : undefined}>
+            <>
+              <div className="rounded-level1 h-[48px] w-[48px] bg-main text-second-background flex justify-center items-center font-bold text-[20px] overflow-hidden">
+                {data?.image?.formats ? (
+                  <img
+                    src={`${BASE_URL}${data?.image?.formats.thumbnail.url}`}
+                    alt="User"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center ">
+                    {`${data?.name.split(' ')[0][0]}${
+                      data?.name.split(' ')[1][0]
+                    }`}
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col max-w-[200px]">
+                <p className="text-[16px] truncate" title={data?.name}>
+                  {data?.name}
+                </p>
+                <p className="text-[12px]">{t(`profile.text.${data?.type}`)}</p>
+              </div>
+            </>
+          </DataDisplay>
         </div>
       </div>
 
@@ -57,22 +91,45 @@ const UserDetailsSidebar = ({ isMobile }) => {
         createPortal(
           <div
             ref={popupRef} // <-- attach ref here
-            className="absolute z-50 bg-second-background shadow-lg  border border-main-background w-60 rounded-level1"
+            className="absolute z-50 bg-second-background shadow-lg  border border-main-background w-[60] rounded-level1"
             style={{
               bottom: popupPos.bottom,
               ...(isRTL ? { right: popupPos.left } : { left: popupPos.left }),
             }}>
             <div className="flex px-[16px] w-full py-[16px] gap-[12px] items-center">
-              <div className="rounded-level1 h-[48px] w-[48px] bg-main text-second-background flex justify-center items-center font-bold text-[20px]">
-                AS
+              <div className="rounded-level1 h-[48px] w-[48px] bg-main text-second-background flex justify-center items-center font-bold text-[20px] overflow-hidden">
+                {data?.image?.formats ? (
+                  <img
+                    src={`${BASE_URL}${data?.image?.formats.thumbnail.url}`}
+                    alt="User"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center ">
+                    {`${data?.name.split(' ')[0][0]}${
+                      data?.name.split(' ')[1][0]
+                    }`}
+                  </div>
+                )}
               </div>
-              <div className="flex flex-col">
-                <p className="text-[16px]">Amr Shoukry</p>
-                <p className="text-[12px]">Employee</p>
+              <div className="flex flex-col max-w-[140px]">
+                <p className="text-[16px] truncate" title={data?.name}>
+                  {data?.name}
+                </p>
+                <p className="text-[12px]">{t(`profile.text.${data?.type}`)}</p>
               </div>
             </div>
             <hr />
-            <p className="px-[16px] py-[8px]">Logout</p>
+            <Link to={'/profile'} className="flex px-[16px] py-[8px]">
+              Profile
+            </Link>
+
+            <hr />
+            <button
+              className="px-[16px] py-[8px] w-full text-start"
+              onClick={handleLogout}>
+              Logout
+            </button>
           </div>,
           document.body,
         )}

@@ -5,7 +5,7 @@ import React, { type MouseEventHandler } from 'react';
 type ButtonProps = {
   className?: string;
   disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset' | 'label';
   onClick?: MouseEventHandler<HTMLButtonElement>;
   variant?: 'default' | 'inverse';
   children: React.ReactNode;
@@ -24,12 +24,21 @@ const Button: React.FC<ButtonProps> = ({
   href = '',
 }) => {
   const baseStyles =
-    'flex justify-center rounded-level1 py-[8px] cursor-pointer transition-[0.5s]';
-  const variantStyles = disabled
-    ? 'bg-disabled'
-    : variant === 'inverse'
-    ? 'bg-second-background hover:bg-main-background text-main'
-    : 'bg-main hover:bg-main-hover text-text-secondary';
+    'flex justify-center rounded-level1 py-[8px] cursor-pointer transition-[0.5s] min-w-[160px] px-[8px]';
+  const variantStyles = clsx(
+    disabled && 'opacity-[50%]',
+    variant === 'inverse'
+      ? 'bg-second-background hover:bg-main-background text-main'
+      : 'bg-main hover:bg-main-hover text-text-secondary',
+  );
+
+  if (type === 'label') {
+    return (
+      <label className={clsx(baseStyles, variantStyles, className)}>
+        {children}
+      </label>
+    );
+  }
 
   if (link) {
     return (
