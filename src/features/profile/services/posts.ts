@@ -1,7 +1,7 @@
 import api from '../../../lib/axios';
 import { decodeJwt, getCookie } from '../../../shared/utils/auth';
 
-export const updateImage = async (file: File) => {
+export const updateImage = async (id, file: File) => {
   // Step 1: prepare formData
   const formData = new FormData();
   formData.append('files', file);
@@ -16,19 +16,17 @@ export const updateImage = async (file: File) => {
 
   // Step 3: update the user with new avatar/image
 
-  const myId = decodeJwt(String(getCookie('token'))).id;
+  // const myId = decodeJwt(String(getCookie('token'))).id;
 
-  const updateRes = await api.put(`/users/${myId}`, {
+  const updateRes = await api.put(`/users/${id}`, {
     image: fileId, // assumes you added an 'avatar' relation to User
   });
 
   return updateRes.data;
 };
 
-export const deleteImage = () => {
-  const myId = decodeJwt(String(getCookie('token'))).id;
-
-  return api.put(`/users/${myId}`, { image: null }).then((res) => res.data);
+export const deleteImage = (id) => {
+  return api.put(`/users/${id}`, { image: null }).then((res) => res.data);
 };
 
 export const editUser = (data) => {

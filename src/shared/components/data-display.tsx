@@ -29,7 +29,7 @@ const DataDisplay = <T,>({
     return <p>{error}</p>;
   }
 
-  return <Loading />;
+  return children;
 };
 
 export default DataDisplay;

@@ -3,7 +3,7 @@ import { deleteImage } from '../services/posts';
 
 const useDeleteImage = () => {
   return useMutation({
-    mutationFn: () => deleteImage(),
+    mutationFn: (id) => deleteImage(id),
   });
 };
 

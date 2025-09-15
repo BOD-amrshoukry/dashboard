@@ -20,13 +20,53 @@
       "submit": "Submit",
       "update": "Update",
       "delete": "Delete",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "prev": "Prev",
+      "next": "Next",
+      "page": "Page",
+      "of": "of",
+      "search": "Search...",
+      "select": "Select...",
+      "selected": "Selected",
+      "noResults": "No Results",
+      "new": "New",
+      "create": "Create",
+      "edit": "Edit",
+      "view": "View",
+      "deleteAll": "Delete All",
+      "restoreAll": "Restore All",
+      "unassignAll": "Unassign All",
+      "save": "Save",
+      "restore": "Restore",
+      "unassign": "Unassign",
+      "assign": "Assign",
+      "all": "All",
+      "'s": "'s",
+      "pay": "Pay",
+      "left": "left",
+      "total": "Total",
+      "mark": "Mark as read"
     },
     "pending": {
       "submitting": "Submitting...",
       "updating": "Updating...",
       "deleting": "Deleting...",
-      "confirming": "Confirming..."
+      "confirming": "Confirming...",
+      "loading": "Loading...",
+      "refreshing": "Refreshing...",
+      "searching": "Searching...",
+      "creating": "Creating...",
+      "editing": "Editing...",
+      "viewing": "Viewing...",
+      "saving": "Saving...",
+      "restoring": "Restoring...",
+      "unassigning": "Unassigning",
+      "assigning": "Assigning...",
+      "paying": "Paying...",
+      "marking": "Marking..."
+    },
+    "errors": {
+      "required": "This field is required"
     }
   },
   "auth": {
@@ -88,7 +128,9 @@
       "dashboard": "Dashboard",
       "tickets": "Tickets",
       "logout": "Logout",
-      "logo": "ShoukryBoard"
+      "logo": "ShoukryBoard",
+      "recycleBin": "Recycle Bin",
+      "plans": "Plans"
     }
   },
   "profile": {
@@ -99,9 +141,9 @@
       "employee": "Employee",
       "manager": "Manager",
       "admin": "Admin",
-      "previewImage": "Preview your new image",
+      "previewImage": "Preview new image",
       "deleteImageHead": "Delete Image",
-      "deleteImageDescription": "Are you sure you want to delete your image?",
+      "deleteImageDescription": "Are you sure you want to delete the image?",
       "deleteImage": "Delete Image",
       "updateImage": "Update Image"
     },
@@ -109,13 +151,179 @@
       "name": "Invalid Name",
       "update": "Error on updating the data",
       "load": "Failed to load user's data",
-      "imageUpdate": "Failed to update your image!",
-      "imageDelete": "Failed to delete your image!"
+      "imageUpdate": "Failed to update image!",
+      "imageDelete": "Failed to delete image!"
     },
     "success": {
       "update": "Your data has been updated successfully!",
-      "imageUpdate": "Your image has been saved successfully!",
-      "imageDelete": "Your image has been deleted successfully!"
+      "imageUpdate": "Image has been saved successfully!",
+      "imageDelete": "Image has been deleted successfully!"
+    }
+  },
+  "tables": {
+    "text": {
+      "filterKeyPlaceholder": "Filter by...",
+      "filterValuePlaceholder": "Value...",
+      "filter": "Filter...",
+      "items": "Items",
+      "rowsPerPage": "Rows per page",
+      "actions": "Actions"
+    }
+  },
+  "tickets": {
+    "text": {
+      "ticket": "Ticket",
+      "tickets": "Tickets",
+      "ticketsPlaceholder": "Enter yout tickets",
+      "recycledTicket": "Recycled Ticket",
+      "deleteHead": "Delete Ticket",
+      "deleteDescription": "Are you sure you want to delete the selected ticket? (name: {{name}})",
+      "deleteMultipleHead": "Delete Tickets",
+      "deleteMultipleDescription": "Are you sure you want to delete the selecteds tickets? (count: {{count}})",
+      "newTicket": "New Ticket",
+      "name": "Name",
+      "namePlaceholder": "Enter ticket name",
+      "state": "Status",
+      "statePlaceholder": "Choose the status",
+      "user": "Assigne",
+      "userPlaceholder": "Choose an assigne",
+      "completed": "Completed",
+      "open": "Open",
+      "pending": "Pending",
+      "restoreHead": "Restore Ticket",
+      "restoreDescription": "Are you sure you want to restore the selected ticket? (name: {{name}})",
+      "restoreMultipleHead": "Restore Tickets",
+      "restoreMultipleDescription": "Are you sure you want to restore the selecteds tickets? (count: {{count}})",
+      "deleteHardHead": "Permanantely Delete Ticket",
+      "deleteHardDescription": "Are you sure you want to permanantely delete the selected ticket? (name: {{name}})",
+      "deleteHardMultipleHead": "Permanantely Delete Tickets",
+      "deleteHardMultipleDescription": "Are you sure you want to permanantely delete the selecteds tickets? (count: {{count}})",
+      "remaining": "Remaining Days",
+      "unassignHead": "Unassign Ticket",
+      "unassignDescription": "Are you sure you want to unassign the selected ticket (name: {{name}}) from the selected employee (name: {{employee}})",
+      "unassignMultipleHead": "Unassign Tickets",
+      "unassignMultipleDescription": "Are you sure you want to unassign the selected tickets? (count: {{count}}) from the selected employee (name: {{employee}})"
+    },
+    "errors": {
+      "load": "Couln't fetch tickets!",
+      "loadOne": "Couldn't fetch ticket's data",
+      "loadRecycle": "Couln't fetch recycled tickets!",
+      "loadOneRecycle": "Couldn't fetch recycled ticket's data",
+      "name": "Name can't be less than 2 characters",
+      "user": "Invalid user selection",
+      "state": "Invalid status selection",
+      "new": "Couldn't create ticket!",
+      "edit": "Couldn't edit ticket!",
+      "softDeletedOne": "Couldn't delete Ticket!",
+      "softDeleted": "Couldn't delete Tickets!",
+      "restoreOne": "Couldn't restore Ticket!",
+      "restore": "Couldn't restore Tickets!",
+      "hardDeletedOne": "Couldn't delete Ticket!",
+      "hardDeleted": "Couldn't delete Tickets!",
+      "unassignOne": "Couldn't unassign Ticket!",
+      "unassign": "Couldn't unassign Tickets!",
+      "assignOne": "You must provide at least one ticket",
+      "assign": "Couldnt assign ticket"
+    },
+    "success": {
+      "new": "Ticket created successfully!",
+      "edit": "Ticket edited successfully!",
+      "softDeletedOne": "Ticket deleted successfully!",
+      "softDeleted": "Tickets deleted successfully!",
+      "restoreOne": "Ticket restored successfully!",
+      "restore": "Tickets restored successfully!",
+      "hardDeletedOne": "Ticket deleted successfully!",
+      "hardDeleted": "Tickets deleted successfully!",
+      "unassignOne": "Ticket unassigned successfully!",
+      "unassign": "Tickets unassigned successfully!",
+      "assign": "Tickets assigned successfully!"
+    }
+  },
+  "users": {
+    "text": {
+      "employee": "Employee",
+      "manager": "Manager",
+      "managers": "Managers",
+      "name": "Name",
+      "namePlaceholder": "Enter user's name",
+      "username": "Username",
+      "usernamePlaceholder": "Enter user's username",
+      "email": "Email",
+      "emailPlaceholder": "Enter user's email",
+      "image": "Image",
+      "deleteHead": "Delete Manager",
+      "deleteDescription": "Are you sure you want to delete the selected manager? (name: {{name}})",
+      "deleteManagerMultipleHead": "Delete Managers",
+      "deleteManagerMultipleDescription": "Are you sure you want to delete the selecteds managers? (count: {{count}})",
+      "deleteEmployeeHead": "Delete Employee",
+      "deleteEmployeeDescription": "Are you sure you want to delete the selected employee? (name: {{name}})",
+      "deleteEmployeeMultipleHead": "Delete Employees",
+      "deleteEmployeeMultipleDescription": "Are you sure you want to delete the selecteds employees? (count: {{count}})"
+    },
+    "errors": {
+      "load": "Couln't fetch Managers!",
+      "loadOne": "Couldn't fetch Manager's data",
+      "loadEmployee": "Couln't fetch Employees!",
+      "loadOneEmployee": "Couldn't fetch Employee's data",
+      "name": "Invalid Name",
+      "username": "Invalide Username",
+      "email": "Invalid Email",
+      "edit": "Couldn't update Manager!",
+      "editEmployee": "Couldn't update Manager!",
+      "create": "Couldn't create Manager!",
+      "createEmployee": "Couldn't create Manager!"
+    },
+    "success": {
+      "deletedOne": "Manager deleted successfully!",
+      "deleted": "Managers deleted successfully!",
+      "deletedOneEmployee": "Employee deleted successfully!",
+      "deletedEmployee": "Employees deleted successfully!",
+      "edit": "Manager updated successfully!",
+      "editEmployee": "Employee updated successfully!",
+      "create": "Manager created successfully! Please check manager's email",
+      "createEmployee": "Employee created successfully! Please check employee's email"
+    }
+  },
+  "plans": {
+    "text": {
+      "current": "Current",
+      "buy": "Buy",
+      "subscribe": "Subscribe",
+      "stop": "Want to stop using our services?",
+      "unsubscribe": "Unsubscribe mail",
+      "pay": "Pay"
+    },
+    "errors": {
+      "load": "Couln't fetch plans!",
+      "token": "Couldn't pay currently!",
+      "pay": "Couldn't subscribe to this plan!"
+    },
+    "success": {
+      "pay": "Subscribed to plan {{plan}} successfully!"
+    }
+  },
+  "help": {
+    "text": {
+      "head": "Tutorial on our system"
+    }
+  },
+  "notifications": {
+    "text": {
+      "notifications": "Notifications",
+      "markAll": "Mark All as read"
+    },
+    "errors": {
+      "load": "Couln't fetch notifications!",
+      "loadCount": "Couldn't load notifications count!",
+      "zero": "No Notifications found",
+      "mark": "Couldn't mark notification",
+      "markAll": "Couldn't mark all notifications",
+      "send": "Couldn't send notification"
+    },
+    "success": {
+      "mark": "Notification Marked sucessfully",
+      "markAll": "All notifications Marked successfully!",
+      "send": "Notification sent successfully!"
     }
   }
 }

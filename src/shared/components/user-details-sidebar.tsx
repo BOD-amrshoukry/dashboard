@@ -6,6 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import useUser from '../hooks/use-user';
 import DataDisplay from './data-display';
 import { BASE_URL } from '../constants/api';
+import { queryClient } from '../../lib/tanstackquery';
+import useClearPushToken from '../hooks/use-clear-push-token';
 
 const UserDetailsSidebar = ({ isMobile }) => {
   const [popupOpen, setPopupOpen] = useState(false);
@@ -41,8 +43,16 @@ const UserDetailsSidebar = ({ isMobile }) => {
     setPopupOpen(true);
   };
 
+  const {
+    mutate: mutateClear,
+    isPending: isPendingClear,
+    isError: isErrorClear,
+  } = useClearPushToken();
+
   const handleLogout = () => {
     deleteCookie('token');
+    mutateClear();
+    queryClient.clear();
     navigate('/login');
   };
 

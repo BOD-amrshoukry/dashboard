@@ -8,6 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   errors?: FieldErrors;
   className?: string;
+  outerClassName?: string;
   label?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -24,6 +25,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       label,
       placeholder,
       disabled,
+      outerClassName = '',
       ...rest
     },
     ref,
@@ -34,8 +36,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputType = isPassword && showPassword ? 'text' : type;
 
     return (
-      <div className="flex flex-col gap-[8px] relative">
-        {label && <p>{label}</p>}
+      <div className={clsx('flex flex-col gap-[8px] relative', outerClassName)}>
+        {label && <label>{label}</label>}
         <div
           className={clsx(
             'border-1  outline-0 rounded-level1 text-[14px] w-full flex',

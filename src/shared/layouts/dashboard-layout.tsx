@@ -7,7 +7,10 @@ import {
   Ticket,
   Users,
   Menu,
-  X, // add the X icon from lucide-react
+  X,
+  Trash2,
+  StretchHorizontal,
+  CircleQuestionMark, // add the X icon from lucide-react
 } from 'lucide-react';
 import useSidebarStore from '../store/use-sidebar-store';
 import { useTranslation } from 'react-i18next';
@@ -16,12 +19,17 @@ import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import UserDetailsSidebar from '../components/user-details-sidebar';
+import useGetNotificationsCount from '../../features/notifications/hooks/use-get-notifications-count';
+import { decodeJwt, getCookie } from '../utils/auth';
+import NotificationsIcon from '../components/notification-icon';
+import PushNotification from '../../components/push-notification';
 
 const DashboardLayout = () => {
   const { isExpanded, toggleSidebar } = useSidebarStore();
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const isRTL = i18n.dir() === 'rtl';
+  const id = decodeJwt(String(getCookie('token'))).id;
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -30,6 +38,12 @@ const DashboardLayout = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const {
+    data: notificationsData,
+    isError,
+    isPending,
+  } = useGetNotificationsCount(id);
 
   const data = [
     {
@@ -50,11 +64,29 @@ const DashboardLayout = () => {
       text: t('navbar.text.profile'),
     },
     {
-      icon: <BellRing />,
+      icon: (
+        <NotificationsIcon unreadCount={notificationsData?.data?.unreadCount} />
+      ),
       href: '/notifications',
       text: t('navbar.text.notifications'),
     },
+    {
+      icon: <StretchHorizontal />,
+      href: '/plans',
+      text: t('navbar.text.plans'),
+    },
+
     { icon: <Settings />, href: '/settings', text: t('navbar.text.settings') },
+    {
+      icon: <Trash2 />,
+      href: '/recycle-bin',
+      text: t('navbar.text.recycleBin'),
+    },
+    {
+      icon: <CircleQuestionMark />,
+      href: '/help',
+      text: t('navbar.text.help'),
+    },
   ];
 
   return (
@@ -70,7 +102,7 @@ const DashboardLayout = () => {
       {/* Sidebar */}
       <aside
         className={clsx(
-          'flex flex-col fixed min-h-screen p-[12px] z-30 transition-transform duration-300',
+          'flex flex-col fixed min-h-screen p-[12px] z-[990] transition-transform duration-300',
           isMobile && 'bg-second-background',
           isMobile
             ? isExpanded
@@ -134,8 +166,8 @@ const DashboardLayout = () => {
       <main
         className={clsx(
           'transition-all duration-300',
-          'min-h-screen',
-          'pt-[96px]',
+          'min-h-[calc(100vh-32px)]',
+          'pt-[96px] pb-[32px]',
           isRTL
             ? isExpanded
               ? 'pr-[336px] pl-[12px]'
@@ -145,6 +177,7 @@ const DashboardLayout = () => {
             : 'pl-[16px] pr-[16px]',
         )}>
         <Outlet />
+        <PushNotification userId={id} />
       </main>
     </>
   );

@@ -1,22 +1,29 @@
 import { useEffect } from 'react';
 import { urlBase64ToUint8Array } from '../shared/utils/notifications';
 
-const PushNotification = ({ userId }: { userId: number }) => {
+interface PushNotificationProps {
+  userId: number;
+}
+
+const PushNotification: React.FC<PushNotificationProps> = ({ userId }) => {
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
 
     const subscribeUser = async () => {
       try {
-        // Register the service worker
+        // 1. Register the service worker
         const registration = await navigator.serviceWorker.register(
           '/service-worker.js',
         );
 
-        // Request notification permission
+        // 2. Request notification permission
         const permission = await Notification.requestPermission();
-        if (permission !== 'granted') return;
+        if (permission !== 'granted') {
+          console.log('Push notifications permission denied');
+          return;
+        }
 
-        // Subscribe to push
+        // 3. Subscribe to push
         const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(
@@ -24,33 +31,61 @@ const PushNotification = ({ userId }: { userId: number }) => {
           ),
         });
 
-        // Convert to JSON to access keys safely
         const subscriptionJSON = subscription.toJSON();
+        const endpoint = subscriptionJSON.endpoint;
 
-        const data = JSON.stringify({
-          endpoint: subscriptionJSON.endpoint,
-          keys_p256dh: subscriptionJSON.keys?.p256dh,
-          keys_auth: subscriptionJSON.keys?.auth,
-          user: userId, // attach the userId
-        });
+        console.log('endpoint', endpoint);
 
-        // Send subscription to Strapi
-        await fetch('http://localhost:1337/api/push-subscriptions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            data: {
-              endpoint: subscriptionJSON.endpoint,
-              keys_p256dh: subscriptionJSON.keys?.p256dh,
-              keys_auth: subscriptionJSON.keys?.auth,
-              user: userId, // attach the userId
-            },
-          }),
-        });
+        if (!endpoint) {
+          console.warn('Push subscription endpoint is undefined, aborting.');
+          return;
+        }
 
-        console.log(data);
+        // 4. Check if subscription already exists
+        const existingRes = await fetch(
+          `http://localhost:1337/api/push-subscriptions?populate=user&filters[endpoint][$eq]=${encodeURIComponent(
+            endpoint,
+          )}`,
+        );
+        const existingData = await existingRes.json();
+
+        if (existingData.data?.length > 0) {
+          const existing = existingData.data[0];
+
+          console.log('existing', existing);
+
+          // Update user if different
+          if (existing.user?.id !== userId) {
+            await fetch(
+              `http://localhost:1337/api/push-subscriptions/${existing.documentId}`,
+              {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: { user: userId } }),
+              },
+            );
+            console.log('Updated existing push subscription with new userId');
+          } else {
+            console.log('Push subscription already exists for this user');
+          }
+        } else {
+          // 5. Create a new subscription
+          await fetch('http://localhost:1337/api/push-subscriptions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              data: {
+                endpoint,
+                keys_p256dh: subscriptionJSON.keys?.p256dh,
+                keys_auth: subscriptionJSON.keys?.auth,
+                user: userId,
+              },
+            }),
+          });
+          console.log('Created new push subscription');
+        }
       } catch (error) {
-        console.error('Error subscribing to push', error);
+        console.error('Error subscribing to push notifications', error);
       }
     };
 

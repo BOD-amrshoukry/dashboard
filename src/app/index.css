@@ -100,3 +100,25 @@ body {
   }
 }
 
+.braintree-show-card,
+.braintree-card {
+  @apply rounded-[12px];
+}
+
+.braintree-form__flexible-fields {
+  @apply flex-col gap-[0px];
+}
+
+.braintree-sheet__content--form,
+.braintree-form__flexible-fields,
+.braintree-form__field-group {
+  flex-basis: 0 !important;
+}
+
+.braintree-sheet__content--form,
+.braintree-form__field-group,
+.braintree-form__field,
+.braintree-form__hosted-field {
+  border-radius: 8px;
+}
+

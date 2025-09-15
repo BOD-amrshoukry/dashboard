@@ -22,9 +22,10 @@ const Button: React.FC<ButtonProps> = ({
   children,
   link = false,
   href = '',
+  ...rest
 }) => {
   const baseStyles =
-    'flex justify-center rounded-level1 py-[8px] cursor-pointer transition-[0.5s] min-w-[160px] px-[8px]';
+    'flex justify-center items-center rounded-level1 py-[8px] cursor-pointer transition-[0.5s] min-w-[160px] px-[8px]';
   const variantStyles = clsx(
     disabled && 'opacity-[50%]',
     variant === 'inverse'
@@ -53,7 +54,8 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
       type={type}
       onClick={onClick}
-      className={clsx(baseStyles, variantStyles, className)}>
+      className={clsx(baseStyles, variantStyles, className)}
+      {...rest}>
       {children}
     </button>
   );

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './protected-route';
 import { LoginPage } from '../../features/auth';
 import DashboardPage from '../../features/dashboard/pages/dashboard-page';
@@ -9,6 +9,23 @@ import NotFound from '../../shared/pages/not-found';
 import SettingsPage from '../../features/dashboard/pages/settings-page';
 import DashboardLayout from '../../shared/layouts/dashboard-layout';
 import ProfilePage from '../../features/profile/pages/profile-page';
+import TicketsPage from '../../features/tickets/pages/tickets-page';
+import NewTicketPage from '../../features/tickets/pages/new-ticket';
+import EditTicketPage from '../../features/tickets/pages/edit-ticket';
+import ViewTicketPage from '../../features/tickets/pages/view-ticket';
+import RecycleBinPage from '../../features/tickets/pages/recycle-bin';
+import ViewRecycleTicket from '../../features/tickets/pages/view-recycle-ticket';
+import ManagersPage from '../../features/users/pages/managers';
+import NewManagerPage from '../../features/users/pages/new-manager';
+import EditManagerPage from '../../features/users/pages/edit-manager';
+import ViewManagerPage from '../../features/users/pages/view-manager';
+import EmployeesPage from '../../features/users/pages/employees';
+import EditEmployeePage from '../../features/users/pages/edit-employee';
+import NewEmployeePage from '../../features/users/pages/new-employee';
+import ViewEmployeePage from '../../features/users/pages/view-employee';
+import PlansPage from '../../features/plans/pages/plans';
+import HelpPage from '../../features/dashboard/pages/help-page';
+import NotificationsPage from '../../features/notifications/pages/notifications';
 
 const AppRoutes = () => {
   return (
@@ -22,7 +39,33 @@ const AppRoutes = () => {
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
+            <Route path="/" element={<Navigate to={'/dashboard'} />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+
+            <Route path="/tickets" element={<TicketsPage />} />
+            <Route path="/tickets/new" element={<NewTicketPage />} />
+            <Route path="/tickets/:id" element={<ViewTicketPage />} />
+            <Route path="/tickets/:id/edit" element={<EditTicketPage />} />
+
+            <Route path="/recycle-bin" element={<RecycleBinPage />} />
+            <Route path="/recycle-bin/:id" element={<ViewRecycleTicket />} />
+
+            <Route path="/managers" element={<ManagersPage />} />
+            <Route path="/managers/new" element={<NewManagerPage />} />
+            <Route path="/managers/:id" element={<ViewManagerPage />} />
+            <Route path="/managers/:id/edit" element={<EditManagerPage />} />
+
+            <Route path="/employees" element={<EmployeesPage />} />
+            <Route path="/employees/new" element={<NewEmployeePage />} />
+            <Route path="/employees/:id" element={<ViewEmployeePage />} />
+            <Route path="/employees/:id/edit" element={<EditEmployeePage />} />
+
+            <Route path="/notifications" element={<NotificationsPage />} />
+
+            <Route path="/plans" element={<PlansPage />} />
+
+            <Route path="/help" element={<HelpPage />} />
+
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>

@@ -1,13 +1,14 @@
 import React from 'react';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import useUser from '../../../shared/hooks/use-user';
-import UserImage from '../components/user-image';
+import UserImage from '../../../shared/components/user-image';
 import { BASE_URL } from '../../../shared/constants/api';
 import useUpdateImage from '../hooks/use-update-image';
 import useDeleteImage from '../hooks/use-delete-image';
 import DataDisplay from '../../../shared/components/data-display';
 import UserForm from '../components/user-form';
 import { useTranslation } from 'react-i18next';
+import { decodeJwt, getCookie } from '../../../shared/utils/auth';
 
 const ProfilePage = () => {
   const { t } = useTranslation();
@@ -16,6 +17,8 @@ const ProfilePage = () => {
   const { data, isPending, isError } = useUser();
   const updateMutation = useUpdateImage();
   const deleteMutation = useDeleteImage();
+
+  const id = decodeJwt(String(getCookie('token'))).id;
 
   return (
     <>
@@ -30,6 +33,8 @@ const ProfilePage = () => {
             {t('profile.text.userType')} {t(`profile.text.${data?.type}`)}
           </h2>
           <UserImage
+            type="me"
+            id={id}
             imageUrl={
               data?.image?.formats
                 ? `${BASE_URL}${data?.image?.formats.thumbnail.url}`
