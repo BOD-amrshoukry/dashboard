@@ -1,69 +1,134 @@
-# React + TypeScript + Vite
+# Ticketing System Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive **ticketing system dashboard** built with React, providing role-based access for employees, managers, and owners. The system allows assignment, tracking, and management of tickets, along with real-time chat, notifications, multi-language support, and payment integration.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Features](#features)  
+- [Tech Stack](#tech-stack)  
+- [Folder Structure](#folder-structure)  
+- [Installation](#installation)  
+- [Usage](#usage)  
+- [Contributing](#contributing)  
+- [License](#license)  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **Role-Based Access**: Different views for employees, managers, and owners.  
+- **Ticket Management**:  
+  - Tickets can have **Open**, **Pending**, or **Completed** statuses.  
+  - Tickets are assigned by managers or owners to employees.  
+- **Authentication**:  
+  - Login, logout, password reset, and forgot password via email.  
+- **Real-Time Chat**: Users can chat with each other using **Socket.IO**.  
+- **Notifications**: Push notifications for ticket updates and messages.  
+- **Multi-Language Support**: Switch between multiple languages using **i18next**.  
+- **Multi-Theme Support**: Light and dark modes.  
+- **Plans & Payments**: Integration with **Braintree** and **PayPal** for subscription or one-time payments.  
+- **User Profiles**: Each user has a personal profile page.  
+- **Dashboard Insights**: Analytics and insights for tickets and users using **Recharts**.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Tech Stack
+
+- **Frontend**: React, React Router, React Hook Form, Zod, Tailwind CSS, Lucide React  
+- **State Management**: Zustand  
+- **API & Data**: Axios, TanStack React Query  
+- **Real-Time**: Socket.IO  
+- **Payment Integration**: Braintree Web Drop-in, PayPal  
+- **Localization**: i18next  
+
+---
+
+## Folder Structure
+
+The project uses a **feature-based structure**:
+
+```
+src/
+├── features/
+│   ├── auth/            # Authentication feature
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── store/
+│   │   └── types/
+│   ├── chats/
+│   ├── dashboard/
+│   ├── notifications/
+│   ├── plans/
+│   ├── profile/
+│   ├── tickets/
+│   └── users/
+├── shared/               # Shared components, utils, hooks
+├── App.tsx
+├── main.tsx
+└── index.css
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Each feature is **self-contained** with its components, hooks, pages, services, store, types, and schemas.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Installation
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/BOD-amrshoukry/dashboard.git
+cd dashboard
 ```
+
+2. **Install dependencies**
+
+```bash
+npm install
+```
+
+3. **Start development server**
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173` (or the port Vite specifies).
+
+---
+
+## Usage
+
+- **Login / Signup**: Access the dashboard using registered credentials.  
+- **Ticket Management**: Employees view assigned tickets, managers/owners can assign tickets.  
+- **Chat**: Communicate with other users in real-time.  
+- **Notifications**: Stay updated on ticket changes and messages.  
+- **Payments**: Subscribe or pay for plans via Braintree/PayPal.  
+- **Theme & Language**: Switch between light/dark themes and supported languages.
+
+---
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository  
+2. Create a feature branch (`git checkout -b feature/my-feature`)  
+3. Make your changes  
+4. Commit changes (`git commit -m "Add my feature"`)  
+5. Push to the branch (`git push origin feature/my-feature`)  
+6. Open a Pull Request  
+
+Please follow the existing code structure and styling conventions.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
