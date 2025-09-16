@@ -51,16 +51,38 @@ const UserForm = ({ data }) => {
     <div>
       <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
         <div className="flex flex-col gap-[16px] mt-[32px] mb-[32px] items-start">
-          <Input
-            label={t('profile.text.name')}
-            placeholder={t('profile.text.namePlaceholder')}
-            type={'string'}
-            {...register('name')}
-            errors={errors}
-            name={'name'}
-            className=""
-            disabled={isPending}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-[24px]">
+            <Input
+              label={t('profile.text.name')}
+              placeholder={t('profile.text.namePlaceholder')}
+              type={'string'}
+              {...register('name')}
+              errors={errors}
+              name={'name'}
+              className=""
+              disabled={isPending}
+            />
+
+            <Input
+              label={t('profile.text.email')}
+              type={'email'}
+              value={data?.email}
+              errors={errors}
+              name={'email'}
+              className=""
+              disabled={true}
+            />
+
+            <Input
+              label={t('profile.text.username')}
+              type={'text'}
+              value={data?.username}
+              errors={errors}
+              name={'username'}
+              className=""
+              disabled={true}
+            />
+          </div>
         </div>
         <Button disabled={isPending || !isDirty}>
           {isPending ? t('general.pending.updating') : t('general.text.update')}

@@ -7,6 +7,7 @@ import Button from './button';
 import { useTranslation } from 'react-i18next';
 import type { FieldErrors } from 'react-hook-form';
 import Loading from './loading';
+import Refetch from './refetch';
 
 interface PaginatedDatalistProps {
   queryKey: string;
@@ -40,6 +41,7 @@ export default function PaginatedDatalist({
   onChange,
   value = null,
   multiple = false,
+  disabled = false,
 }: PaginatedDatalistProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
@@ -73,7 +75,13 @@ export default function PaginatedDatalist({
     return () => clearTimeout(handler);
   }, [query, manualSelection]);
 
-  const { data, isLoading, isFetching } = useQuery({
+  const {
+    data,
+    isPending: isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: [queryKey, debouncedQuery, page],
     queryFn: () =>
       fetchFunction({
@@ -85,6 +93,8 @@ export default function PaginatedDatalist({
     enabled: debouncedQuery.length > 0,
     placeholderData: keepPreviousData,
   });
+
+  console.log('DATT', data);
 
   // Update dropdown position
   useLayoutEffect(() => {
@@ -163,7 +173,7 @@ export default function PaginatedDatalist({
       );
     }
 
-    if ((showDropdown && data?.data?.length > 0) || isFetching) {
+    if (showDropdown || isFetching) {
       return (
         <div
           ref={dropdownRef}
@@ -180,39 +190,49 @@ export default function PaginatedDatalist({
               <Loading />
             </div>
           )}
-          <ul className="shadow h-48 overflow-y-auto overflow-x-hidden w-full">
-            {data?.data
-              ?.filter(
-                (item: any) =>
-                  !selectedItems.some((s) => s[idKey] === item[idKey]),
-              )
-              .map((item: any) => (
-                <li
-                  key={item[idKey]}
-                  onClick={() => handleSelect(item)}
-                  className="px-2 py-1 cursor-pointer hover:bg-main-background">
-                  {item[itemKey]}
-                </li>
-              ))}
-          </ul>
-          <div className="flex gap-2 items-center justify-center bg-second-background p-[8px] shadow-2xl border-t-main border-t-1">
-            <Button
-              disabled={page === 1}
-              onClick={() => setPage((p) => p - 1)}
-              className="min-w-fit px-[16px]">
-              {t('general.text.prev')}
-            </Button>
-            <span className="text-[14px]">
-              {t('general.text.page')} {data?.meta?.pagination?.page ?? 1}{' '}
-              {t('general.text.of')} {data?.meta?.pagination?.pageCount ?? 1}
-            </span>
-            <Button
-              disabled={page >= (data?.meta?.pagination?.pageCount ?? 1)}
-              onClick={() => setPage((p) => p + 1)}
-              className="min-w-fit px-[16px]">
-              {t('general.text.next')}
-            </Button>
-          </div>
+          <>
+            <ul className="shadow h-48 overflow-y-auto overflow-x-hidden w-full">
+              {isError && (
+                <div className="flex items-center gap-[16px]">
+                  <p> {t('general.errors.load')}</p>
+                  <Refetch refetch={refetch} />
+                </div>
+              )}
+              {!isError &&
+                data?.data?.length > 0 &&
+                data?.data
+                  ?.filter(
+                    (item: any) =>
+                      !selectedItems.some((s) => s[idKey] === item[idKey]),
+                  )
+                  .map((item: any) => (
+                    <li
+                      key={item[idKey]}
+                      onClick={disabled ? () => {} : () => handleSelect(item)}
+                      className="px-2 py-1 cursor-pointer hover:bg-main-background">
+                      {item[itemKey]}
+                    </li>
+                  ))}
+            </ul>
+            <div className="flex gap-2 items-center justify-center bg-second-background p-[8px] shadow-2xl border-t-main border-t-1">
+              <Button
+                disabled={page === 1}
+                onClick={() => setPage((p) => p - 1)}
+                className="min-w-fit px-[16px]">
+                {t('general.text.prev')}
+              </Button>
+              <span className="text-[14px]">
+                {t('general.text.page')} {data?.meta?.pagination?.page ?? 1}{' '}
+                {t('general.text.of')} {data?.meta?.pagination?.pageCount ?? 1}
+              </span>
+              <Button
+                disabled={page >= (data?.meta?.pagination?.pageCount ?? 1)}
+                onClick={() => setPage((p) => p + 1)}
+                className="min-w-fit px-[16px]">
+                {t('general.text.next')}
+              </Button>
+            </div>
+          </>
         </div>
       );
     }
@@ -232,6 +252,7 @@ export default function PaginatedDatalist({
         <Input
           ref={inputRef}
           value={query}
+          disabled={disabled}
           onChange={(e) => {
             setManualSelection(false);
             setQuery(e.target.value);
@@ -239,7 +260,7 @@ export default function PaginatedDatalist({
             setShowDropdown(e.target.value.length > 0);
           }}
           placeholder={placeholder || t('general.text.search')}
-          onFocus={() => query && setShowDropdown(true)}
+          onFocus={disabled ? () => {} : () => query && setShowDropdown(true)}
           outerClassName="min-w-full border-none"
           errors={errors}
           name={name}
@@ -251,11 +272,12 @@ export default function PaginatedDatalist({
           {selectedItems.map((item) => (
             <div
               key={item[idKey]}
-              className="flex items-center bg-gray-100 rounded px-3 py-1">
+              className="flex items-center bg-second-background rounded px-3 py-1">
               <span>{item[itemKey]}</span>
               <button
-                onClick={() => removeItem(item[idKey])}
-                className="ml-2 text-red-500 font-bold hover:text-red-700">
+                onClick={disabled ? () => {} : () => removeItem(item[idKey])}
+                className="ml-2 text-red-500 font-bold hover:text-red-700"
+                disabled={disabled}>
                 ×
               </button>
             </div>
@@ -263,10 +285,13 @@ export default function PaginatedDatalist({
         </div>
       ) : (
         selectedItems[0] && (
-          <div className="flex items-center justify-between bg-gray-100 rounded px-3 py-2 mt-2">
+          <div className="flex items-center justify-between bg-second-background rounded px-3 py-2 mt-2">
             <span>{selectedItems[0][itemKey]}</span>
             <button
-              onClick={() => removeItem(selectedItems[0][idKey])}
+              disabled={disabled}
+              onClick={
+                disabled ? () => {} : () => removeItem(selectedItems[0][idKey])
+              }
               className="ml-2 text-red-500 font-bold hover:text-red-700">
               ×
             </button>

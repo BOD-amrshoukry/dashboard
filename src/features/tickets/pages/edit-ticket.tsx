@@ -8,6 +8,8 @@ import useCreateOrUpdateTicket from '../hooks/use-create-or-edit-ticket';
 import { queryClient } from '../../../lib/tanstackquery';
 import useGetTicket from '../hooks/use-get-ticket';
 import DataDisplay from '../../../shared/components/data-display';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
+import { useSocket } from '../../../hooks/use-socket';
 
 const EditTicketPage = () => {
   const { t } = useTranslation();
@@ -17,14 +19,81 @@ const EditTicketPage = () => {
 
   console.log('id', id);
 
-  const { data, isError, isPending: isLoading } = useGetTicket(id);
+  const { data, isError, isPending: isLoading, refetch } = useGetTicket(id);
+  const { mutate: sendNotification } = useSendNotification();
+  const { socket } = useSocket();
 
+  console.log('ASXX', data?.data);
   const handleSubmit = (formData: any) => {
     mutate(
       { id: id, data: formData },
       {
         onSuccess: () => {
           toast.success(t('tickets.success.edit'));
+          if (data?.data?.user?.id) {
+            if (data?.data?.user?.id !== formData?.user) {
+              sendNotification({
+                userId: data?.data?.user?.id,
+                title: t('notifications.text.unassignHead'),
+                message: t('notifications.text.unassignDescription', {
+                  name: formData?.name,
+                }),
+              });
+              if (socket) {
+                socket.emit('sendNotification', {
+                  recipientId: data?.data?.user?.id,
+                  data: {
+                    title: t('notifications.text.unassignHead'),
+                    message: t('notifications.text.unassignDescription', {
+                      name: formData?.name,
+                    }),
+                  },
+                });
+              }
+            }
+          }
+          if (formData?.user) {
+            if (data?.data?.user?.id !== formData?.user) {
+              sendNotification({
+                userId: formData?.user,
+                title: t('notifications.text.assignHead'),
+                message: t('notifications.text.assignDescription', {
+                  name: formData?.name,
+                }),
+              });
+              if (socket) {
+                socket.emit('sendNotification', {
+                  recipientId: formData?.user,
+                  data: {
+                    title: t('notifications.text.assignHead'),
+                    message: t('notifications.text.assignDescription', {
+                      name: formData?.name,
+                    }),
+                  },
+                });
+              }
+            }
+          }
+          if (data?.data?.user?.id && data?.data?.user?.id === formData?.user) {
+            sendNotification({
+              userId: formData?.user,
+              title: t('notifications.text.ticketEditHead'),
+              message: t('notifications.text.ticketEditDescription', {
+                name: formData?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: formData?.user,
+                data: {
+                  title: t('notifications.text.ticketEditHead'),
+                  message: t('notifications.text.ticketEditDescription', {
+                    name: formData?.name,
+                  }),
+                },
+              });
+            }
+          }
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           navigate(`/tickets/${id}`);
         },
@@ -55,6 +124,7 @@ const EditTicketPage = () => {
       />
       <DataDisplay
         data={data}
+        refetch={refetch}
         isLoading={isLoading}
         error={isError ? t('tickets.errors.loadOne') : undefined}>
         <PageHead

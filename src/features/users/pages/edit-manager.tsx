@@ -19,7 +19,7 @@ const EditManagerPage = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = useCreateOrEditManager();
 
-  const { data, isError, isPending: isLoading } = useGetManager(id);
+  const { data, isError, isPending: isLoading, refetch } = useGetManager(id);
 
   const handleSubmit = (formData: any) => {
     mutate(
@@ -61,6 +61,7 @@ const EditManagerPage = () => {
       <DataDisplay
         data={data}
         isLoading={isLoading}
+        refetch={refetch}
         error={isError ? t('users.errors.loadOne') : undefined}>
         <PageHead
           head={`${t('general.text.edit')} ${t('users.text.manager')} (${

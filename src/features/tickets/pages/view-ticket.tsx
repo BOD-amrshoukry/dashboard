@@ -12,13 +12,15 @@ import toast from 'react-hot-toast';
 import { queryClient } from '../../../lib/tanstackquery';
 import Modal from '../../../shared/components/modal';
 import Button from '../../../shared/components/button';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
+import { useSocket } from '../../../hooks/use-socket';
 
 const ViewTicketPage = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isError, isPending: isLoading } = useGetTicket(id);
+  const { data, isError, isPending: isLoading, refetch } = useGetTicket(id);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -29,6 +31,9 @@ const ViewTicketPage = () => {
     isError: isErrorSoftDeleteTicket,
   } = useSoftDeleteTicket();
 
+  const { mutate: sendNotification } = useSendNotification();
+  const { socket } = useSocket();
+
   const handleSubmit = () => {
     softDeleteTicketMutate(id, {
       onSuccess: (returnedData) => {
@@ -36,6 +41,26 @@ const ViewTicketPage = () => {
         queryClient.invalidateQueries({ queryKey: ['tickets'] });
         setIsOpenModal(false);
         navigate(`/tickets`);
+        if (modalData?.value.user.id) {
+          sendNotification({
+            userId: modalData?.value.user.id,
+            title: t('notifications.text.softDeleteHead'),
+            message: t('notifications.text.softDeleteDescription', {
+              name: modalData?.value?.name,
+            }),
+          });
+          if (socket) {
+            socket.emit('sendNotification', {
+              recipientId: modalData?.value?.user?.id,
+              data: {
+                title: t('notifications.text.softDeleteHead'),
+                message: t('notifications.text.softDeleteDescription', {
+                  name: modalData?.value?.name,
+                }),
+              },
+            });
+          }
+        }
       },
       onError: (err) => toast.error(t('tickets.errors.hardDeletedOne')),
     });
@@ -53,6 +78,7 @@ const ViewTicketPage = () => {
       <DataDisplay
         data={data}
         isLoading={isLoading}
+        refetch={refetch}
         error={isError ? t('tickets.errors.loadOne') : undefined}>
         <div className="flex gap-[24px] items-center mb-[32px] flex-wrap">
           <PageHead
@@ -108,35 +134,37 @@ const ViewTicketPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('tickets.text.name')}
             </span>
-            <span className="text-base text-gray-900">
+            <span className="text-base text-main-text">
               {data?.data?.name || '-'}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('tickets.text.state')}
             </span>
-            <span className="text-base text-gray-900">
+            <span className="text-base text-main-text">
               {data?.data?.state || '-'}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('users.text.employee')}
             </span>
             {data?.data?.user?.id ? (
               <Link
                 to={`/employees/${data?.data?.user?.id}`}
-                className="text-base text-gray-900">
+                className="text-base text-main-text">
                 {data?.data?.user?.name || '-'}
               </Link>
             ) : (
-              <span className="text-sm font-medium text-gray-500">-</span>
+              <span className="text-sm font-medium text-main-text-helper">
+                -
+              </span>
             )}
           </div>
         </div>

@@ -23,7 +23,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   const borderClasses =
     variant === 'inverse' ? 'border-main-background' : 'border-main';
   const labelColor =
-    variant === 'inverse' ? 'text-main-background' : 'text-black';
+    variant === 'inverse' ? 'text-main-background' : 'text-main-text';
 
   return (
     <label

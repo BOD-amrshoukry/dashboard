@@ -9,6 +9,7 @@ import Select from '../../../shared/components/select';
 import PaginatedDatalist from '../../../shared/components/paginated-datalist';
 import useTicketSchema, { type TicketFormData } from '../schemas/ticket-schema';
 import { getEmployees } from '../../users/services/get';
+import useUser from '../../../shared/hooks/use-user';
 
 interface TicketFormProps {
   defaultValues?: Partial<TicketFormData>;
@@ -29,6 +30,9 @@ const TicketForm: React.FC<TicketFormProps> = ({
 }) => {
   const { t } = useTranslation();
   const { ticketSchema } = useTicketSchema();
+  const { isPending: myPending, data: myData, isError: myError } = useUser();
+  const isEmployee = myData?.type === 'employee';
+  const id = myData?.id;
 
   const {
     register,
@@ -74,7 +78,7 @@ const TicketForm: React.FC<TicketFormProps> = ({
           errors={errors}
           name="name"
           className="w-full"
-          disabled={isPending}
+          disabled={isPending || isEmployee}
         />
 
         {/* State */}
@@ -115,6 +119,7 @@ const TicketForm: React.FC<TicketFormProps> = ({
               errors={errors}
               name="user"
               value={userValue}
+              disabled={isEmployee}
               onChange={field.onChange}
             />
           )}

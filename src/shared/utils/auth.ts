@@ -48,3 +48,14 @@ export function generateRandomPassword(length = 12) {
   return password;
 }
 
+export function extractUserConditions() {
+  const token = decodeJwt(String(getCookie('token')));
+  console.log('token', token);
+  const id = token.id;
+  const isOwnerManager = token.type === 'owner' || token.type === 'manager';
+  const isOwner = token.type === 'owner';
+  const isEmployee = token.type === 'employee';
+
+  return { id, isOwner, isOwnerManager, isEmployee };
+}
+

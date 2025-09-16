@@ -8,9 +8,9 @@ const VerifiedPage = () => {
 
   return (
     <div className="bg-main-background w-full min-h-screen flex">
-      <div className="flex-1 min-h-screen container">
+      <div className="flex-1 min-h-screen container pb-[32px]">
         <SettingsGuest />
-        <div className="flex justify-center items-center container sm:p-[64px] h-[calc(100vh-56px)]">
+        <div className="flex justify-center items-center container sm:p-[64px] min-h-[calc(100vh-56px)]">
           <div className="bg-second-background w-full p-[32px] rounded-level1">
             <TempAuth
               head={t('auth.text.accountVerified')}

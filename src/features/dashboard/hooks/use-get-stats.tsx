@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { getStats } from '../services/get';
 
 const useGetStats = () => {
-  const { data, isPending, isError } = useQuery({
+  const query = useQuery({
     queryKey: ['stats'],
     staleTime: 0,
     queryFn: () => getStats(),
   });
 
-  return { data, isPending, isError };
+  return query;
 };
 
 export default useGetStats;

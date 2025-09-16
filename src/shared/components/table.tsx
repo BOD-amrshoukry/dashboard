@@ -113,6 +113,7 @@ export function ReusableTable<T extends object>({
   bulkActions,
   is3Dots,
   errorMessage,
+  loadingState,
 }: Props<T>) {
   const [columns, setColumns] = useState(() =>
     initialColumns.map((c) => ({
@@ -159,14 +160,12 @@ export function ReusableTable<T extends object>({
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
     new Set(),
   );
-  const [loading, setLoading] = useState(false);
-
   const [showColumnPopup, setShowColumnPopup] = useState(false);
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
 
   console.log('debouncedFilters', debouncedFilters);
 
-  const { data, isPending, isError, isFetching } = useQuery({
+  const { data, isPending, isError, isFetching, refetch } = useQuery({
     queryKey: Array.isArray(queryKey)
       ? [
           ...queryKey,
@@ -308,7 +307,7 @@ export function ReusableTable<T extends object>({
                 {columns.map((col) => (
                   <label
                     key={col.id}
-                    className="flex items-center gap-1 text-sm">
+                    className="flex items-center gap-1 text-sm text-main-text">
                     <Checkbox
                       checked={!!col.visible}
                       disabled={col.fixedVisible}
@@ -401,17 +400,18 @@ export function ReusableTable<T extends object>({
       </div>
 
       <DataDisplay
-        isLoading={false}
+        isLoading={isPending}
         data={data}
+        refetch={refetch}
         error={isError ? errorMessage : undefined}>
         {/* Table */}
         <div className="border border-main rounded-level1 overflow-hidden">
           <div className="overflow-auto h-[60vh] relative ">
             {!isPending && (
-              <table className="table-fixed w-full min-w-[400px]">
+              <table className="table-fixed w-full min-w-[600px]">
                 <thead>
                   <tr className="bg-main-text-helper text-second-background">
-                    {(rowActions?.length || bulkActions?.length) > 0 && (
+                    {bulkActions?.length > 0 && (
                       <th className="sticky top-0 z-30  p-2 text-center w-[56px] bg-main-text-helper">
                         <div className="flex items-center justify-center">
                           <th className="sticky top-0 z-30 p-2 text-center w-[56px] bg-main-text-helper">
@@ -429,7 +429,7 @@ export function ReusableTable<T extends object>({
                     {visibleColumns.map((col) => (
                       <th
                         key={col.id}
-                        className={`sticky top-0 z-10  p-[12px] text-left  bg-main-text-helper w-full `}
+                        className={`sticky top-0 z-10  p-[12px] align-middle max-w-[200px] truncate whitespace-nowrap overflow-hidden  bg-main-text-helper w-full `}
                         style={{ width: col.width }}
                         onClick={() => col.sortable && toggleSort(col.id)}>
                         <div className="flex items-center gap-2">
@@ -464,7 +464,7 @@ export function ReusableTable<T extends object>({
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {false ? (
                     <tr>
                       <td
                         colSpan={visibleColumns.length + 2}
@@ -495,7 +495,7 @@ export function ReusableTable<T extends object>({
                               ? 'bg-second-background'
                               : 'bg-main-background',
                           )}>
-                          {(rowActions?.length || bulkActions?.length) > 0 && (
+                          {bulkActions?.length > 0 && (
                             <td className="p-2">
                               <div className="flex items-center justify-center">
                                 <Checkbox
@@ -620,7 +620,7 @@ export function ReusableTable<T extends object>({
                 </tbody>
               </table>
             )}
-            {isFetching && (
+            {(isFetching || loadingState) && (
               <div className="absolute inset-0 bg-main-background/30 flex items-center justify-center z-10">
                 <Loading />
               </div>

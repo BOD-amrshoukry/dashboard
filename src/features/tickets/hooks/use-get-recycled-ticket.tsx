@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { getRecycledTicket } from '../services/get';
 
 const useGetRecycledTicket = (id: string) => {
-  const { data, isPending, isError } = useQuery({
+  const query = useQuery({
     queryKey: ['recycle', id],
     queryFn: () => getRecycledTicket(id),
   });
 
-  return { data, isPending, isError };
+  return query;
 };
 
 export default useGetRecycledTicket;

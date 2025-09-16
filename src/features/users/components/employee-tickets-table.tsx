@@ -15,6 +15,8 @@ import { ReusableTable } from '../../../shared/components/table';
 import Modal from '../../../shared/components/modal';
 import Button from '../../../shared/components/button';
 import { fetchTickets } from '../../tickets/services/get';
+import { useSocket } from '../../../hooks/use-socket';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
 
 export default function EmployeeTicketsTable() {
   const navigate = useNavigate();
@@ -171,6 +173,9 @@ export default function EmployeeTicketsTable() {
     isError: isErrorUnassignTickets,
   } = useUnassignTickets();
 
+  const { socket } = useSocket();
+  const { mutate: sendNotification } = useSendNotification();
+
   const handleSubmit = () => {
     if (modalData?.type === 'single' && modalData?.action === 'delete') {
       softDeleteTicketMutate(modalData?.ids, {
@@ -179,6 +184,26 @@ export default function EmployeeTicketsTable() {
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           queryClient.invalidateQueries({ queryKey: ['recycle'] });
           setIsOpenModal(false);
+          if (modalData?.value.user.id) {
+            sendNotification({
+              userId: modalData?.value.user.id,
+              title: t('notifications.text.softDeleteHead'),
+              message: t('notifications.text.softDeleteDescription', {
+                name: modalData?.value?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: modalData?.value?.user?.id,
+                data: {
+                  title: t('notifications.text.softDeleteHead'),
+                  message: t('notifications.text.softDeleteDescription', {
+                    name: modalData?.value?.name,
+                  }),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.softDeletedOne')),
       });
@@ -204,6 +229,26 @@ export default function EmployeeTicketsTable() {
           toast.success(t('tickets.success.unassignOne'));
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           setIsOpenModal(false);
+          if (modalData?.value.user.id) {
+            sendNotification({
+              userId: modalData?.value.user.id,
+              title: t('notifications.text.unassignHead'),
+              message: t('notifications.text.unassignDescription', {
+                name: modalData?.value?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: modalData?.value?.user?.id,
+                data: {
+                  title: t('notifications.text.unassignHead'),
+                  message: t('notifications.text.unassignDescription', {
+                    name: modalData?.value?.name,
+                  }),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.unassignOne')),
       });

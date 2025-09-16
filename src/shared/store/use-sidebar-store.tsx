@@ -5,19 +5,20 @@ interface SidebarStore {
   isExpanded: boolean;
   toggleSidebar: () => void;
   setExpanded: (value: boolean) => void;
-  desktopExpanded: boolean; // remember desktop preference
+  desktopExpanded: boolean;
+  closeIfMobile: () => void;
 }
 
 const useSidebarStore = create<SidebarStore>((set, get) => {
   const isClient = typeof window !== 'undefined';
-  const initialExpanded = isClient ? window.innerWidth > 768 : true;
+  const initialExpanded = isClient ? window.innerWidth > 1024 : true;
   const initialDesktopExpanded = initialExpanded; // default desktop state
 
   if (isClient) {
-    let lastIsDesktop = window.innerWidth > 768;
+    let lastIsDesktop = window.innerWidth > 1024;
 
     const handleResize = () => {
-      const isDesktop = window.innerWidth > 768;
+      const isDesktop = window.innerWidth > 1024;
 
       if (isDesktop !== lastIsDesktop) {
         // Mobile view: always collapse
@@ -41,7 +42,7 @@ const useSidebarStore = create<SidebarStore>((set, get) => {
     toggleSidebar: () =>
       set((state) => {
         const isDesktop =
-          typeof window !== 'undefined' ? window.innerWidth > 768 : true;
+          typeof window !== 'undefined' ? window.innerWidth > 1024 : true;
         // update desktop preference if on desktop
         if (isDesktop) {
           return {
@@ -54,12 +55,18 @@ const useSidebarStore = create<SidebarStore>((set, get) => {
     setExpanded: (value) =>
       set((state) => {
         const isDesktop =
-          typeof window !== 'undefined' ? window.innerWidth > 768 : true;
+          typeof window !== 'undefined' ? window.innerWidth > 1024 : true;
         if (isDesktop) {
           return { isExpanded: value, desktopExpanded: value };
         }
         return { isExpanded: value };
       }),
+
+    closeIfMobile: () => {
+      if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+        set({ isExpanded: false });
+      }
+    },
   };
 });
 

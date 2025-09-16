@@ -36,7 +36,7 @@ const NotificationsPage = () => {
     });
   };
 
-  const { isPending, isError, data } = useGetNotificationsCount(id);
+  const { isPending, isError, data, refetch } = useGetNotificationsCount(id);
 
   console.log(data);
 
@@ -46,6 +46,7 @@ const NotificationsPage = () => {
       <div className="flex gap-[24px] items-center mb-[32px] flex-wrap">
         <PageHead head={t('navbar.text.notifications')} />
         <DataDisplay
+          refetch={refetch}
           isLoading={isPending}
           error={isError ? t('notifications.errors.loadCount') : undefined}>
           <PageAction

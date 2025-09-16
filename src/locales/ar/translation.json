@@ -2,15 +2,15 @@
   "settings": {
     "text": {
       "changeLanguage": "تغيير اللغة",
-      "changeTheme": "تغيير النمط",
+      "changeTheme": "تغيير السمة",
       "light": "فاتح",
       "dark": "داكن",
       "changeLanguageModalDescription": "هل أنت متأكد أنك تريد تغيير اللغة إلى {{lang}}؟",
-      "changeThemeModalDescription": "هل أنت متأكد أنك تريد تغيير النمط إلى {{theme}}؟"
+      "changeThemeModalDescription": "هل أنت متأكد أنك تريد تغيير السمة إلى {{theme}}؟"
     },
     "success": {
       "languageChange": "تم تغيير اللغة بنجاح!",
-      "themeChange": "تم تغيير النمط بنجاح!"
+      "themeChange": "تم تغيير السمة بنجاح!"
     }
   },
   "general": {
@@ -20,13 +20,64 @@
       "submit": "إرسال",
       "update": "تحديث",
       "delete": "حذف",
-      "confirm": "تأكيد"
+      "confirm": "تأكيد",
+      "prev": "السابق",
+      "next": "التالي",
+      "page": "صفحة",
+      "of": "من",
+      "search": "بحث...",
+      "select": "اختر...",
+      "selected": "محدد",
+      "noResults": "لا توجد نتائج",
+      "new": "جديد",
+      "create": "إنشاء",
+      "edit": "تعديل",
+      "view": "عرض",
+      "deleteAll": "حذف الكل",
+      "restoreAll": "استعادة الكل",
+      "unassignAll": "إلغاء تعيين الكل",
+      "markAll": "تحديد الكل كمقروء",
+      "save": "حفظ",
+      "restore": "استعادة",
+      "unassign": "إلغاء التعيين",
+      "assign": "تعيين",
+      "all": "الكل",
+      "'s": "الخاصة بـ",
+      "pay": "دفع",
+      "left": "متبقي",
+      "total": "الإجمالي",
+      "mark": "تحديد كمقروء",
+      "send": "إرسال",
+      "start": "ابدأ",
+      "close": "إغلاق",
+      "count": "عدد"
     },
     "pending": {
-      "submitting": "جاري الإرسال...",
-      "updating": "جاري التحديث...",
-      "deleting": "جاري الحذف...",
-      "confirming": "جاري التأكيد..."
+      "submitting": "جارٍ الإرسال...",
+      "updating": "جارٍ التحديث...",
+      "deleting": "جارٍ الحذف...",
+      "confirming": "جارٍ التأكيد...",
+      "loading": "جارٍ التحميل...",
+      "refreshing": "جارٍ التحديث...",
+      "searching": "جارٍ البحث...",
+      "creating": "جارٍ الإنشاء...",
+      "editing": "جارٍ التعديل...",
+      "viewing": "جارٍ العرض...",
+      "saving": "جارٍ الحفظ...",
+      "restoring": "جارٍ الاستعادة...",
+      "unassigning": "جارٍ إلغاء التعيين...",
+      "assigning": "جارٍ التعيين...",
+      "paying": "جارٍ الدفع...",
+      "marking": "جارٍ التحديد...",
+      "sending": "جارٍ الإرسال...",
+      "starting": "جارٍ البدء...",
+      "typing": "يكتب...",
+      "isTyping": "يكتب...",
+      "closing": "جارٍ الإغلاق..."
+    },
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "load": "خطأ أثناء تحميل البيانات"
     }
   },
   "auth": {
@@ -42,31 +93,31 @@
       "rememberMe": "تذكرني",
       "forgetPassword": "نسيت كلمة المرور",
       "forgetPasswordDescription": "أدخل بريدك الإلكتروني لاستعادة كلمة المرور",
-      "emailSent": "تم إرسال البريد!",
-      "emailSentDescription": "تم إرسال بريد إلكتروني بنجاح. يرجى التحقق من بريدك للحصول على المزيد من التعليمات!",
+      "emailSent": "تم إرسال البريد الإلكتروني!",
+      "emailSentDescription": "تم إرسال البريد الإلكتروني بنجاح. يرجى التحقق من بريدك لمزيد من التعليمات!",
       "backLogin": "العودة إلى صفحة تسجيل الدخول",
       "resetPassword": "إعادة تعيين كلمة المرور",
-      "resetPasswordDescription": "أدخل كلمة المرور الجديدة للوصول إلى لوحة التحكم",
+      "resetPasswordDescription": "أدخل كلمة مرور جديدة للوصول إلى لوحة التحكم",
       "reset": "إعادة تعيين",
-      "accountVerified": "تم تفعيل الحساب!",
-      "accountVerifiedDescription": "تم تفعيل حسابك بنجاح. يرجى إعادة تعيين كلمة المرور لتتمكن من تسجيل الدخول!",
+      "accountVerified": "تم التحقق من الحساب!",
+      "accountVerifiedDescription": "تم التحقق من حسابك بنجاح. يرجى إعادة تعيين كلمة المرور لتتمكن من تسجيل الدخول!",
       "backReset": "العودة لإعادة تعيين كلمة المرور"
     },
     "errors": {
       "email": "بريد إلكتروني غير صالح",
       "password": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
-      "confirmationPassword": "يجب أن تكون كلمة التأكيد مطابقة لكلمة المرور",
-      "login": "بيانات الدخول غير صحيحة!",
-      "forgetPassword": "هذا البريد غير موجود في قاعدة البيانات!",
+      "confirmationPassword": "يجب أن تكون كلمة المرور المؤكدة مطابقة لكلمة المرور",
+      "login": "بيانات الاعتماد غير صحيحة!",
+      "forgetPassword": "هذا البريد الإلكتروني غير موجود في قاعدة بياناتنا!",
       "resetPassword": "تعذر إعادة تعيين كلمة المرور حالياً!"
     },
     "pending": {
-      "logging": "جاري تسجيل الدخول...",
-      "reseting": "جاري إعادة التعيين..."
+      "logging": "جارٍ تسجيل الدخول...",
+      "reseting": "جارٍ إعادة التعيين..."
     },
     "success": {
       "login": "تم تسجيل الدخول بنجاح!",
-      "forgetPassword": "تم إرسال البريد بنجاح!",
+      "forgetPassword": "تم إرسال البريد الإلكتروني بنجاح!",
       "resetPassword": "تمت إعادة تعيين كلمة المرور بنجاح!"
     }
   },
@@ -81,41 +132,279 @@
     "text": {
       "employees": "الموظفون",
       "managers": "المديرون",
-      "help": "المساعدة",
+      "help": "مساعدة",
       "notifications": "الإشعارات",
       "profile": "الملف الشخصي",
       "settings": "الإعدادات",
       "dashboard": "لوحة التحكم",
       "tickets": "التذاكر",
       "logout": "تسجيل الخروج",
-      "logo": "لوحة شكري"
+      "logo": "لوحة شكري",
+      "recycleBin": "سلة المحذوفات",
+      "plans": "الخطط",
+      "chats": "المحادثات"
     }
   },
   "profile": {
     "text": {
       "name": "الاسم",
       "namePlaceholder": "أدخل اسمك",
+      "email": "البريد الإلكتروني",
+      "username": "اسم المستخدم",
       "userType": "نوع المستخدم:",
       "employee": "موظف",
       "manager": "مدير",
       "admin": "مسؤول",
-      "previewImage": "معاينة صورتك الجديدة",
+      "owner": "مالك",
+      "previewImage": "معاينة الصورة الجديدة",
       "deleteImageHead": "حذف الصورة",
-      "deleteImageDescription": "هل أنت متأكد أنك تريد حذف صورتك؟",
+      "deleteImageDescription": "هل أنت متأكد أنك تريد حذف الصورة؟",
       "deleteImage": "حذف الصورة",
-      "updateImage": "تحديث الصورة"
+      "updateImage": "تحديث الصورة",
+      "profile": "الملف الشخصي",
+      "logout": "تسجيل الخروج"
     },
     "errors": {
       "name": "اسم غير صالح",
-      "update": "خطأ أثناء تحديث البيانات",
+      "update": "خطأ في تحديث البيانات",
       "load": "فشل في تحميل بيانات المستخدم",
-      "imageUpdate": "فشل في تحديث صورتك!",
-      "imageDelete": "فشل في حذف صورتك!"
+      "imageUpdate": "فشل في تحديث الصورة!",
+      "imageDelete": "فشل في حذف الصورة!"
     },
     "success": {
       "update": "تم تحديث بياناتك بنجاح!",
-      "imageUpdate": "تم حفظ صورتك بنجاح!",
-      "imageDelete": "تم حذف صورتك بنجاح!"
+      "imageUpdate": "تم حفظ الصورة بنجاح!",
+      "imageDelete": "تم حذف الصورة بنجاح!"
+    }
+  },
+  "tables": {
+    "text": {
+      "filterKeyPlaceholder": "تصفية حسب...",
+      "filterValuePlaceholder": "القيمة...",
+      "filter": "تصفية...",
+      "items": "العناصر",
+      "rowsPerPage": "الصفوف لكل صفحة",
+      "actions": "الإجراءات"
+    }
+  },
+  "tickets": {
+    "text": {
+      "ticket": "تذكرة",
+      "tickets": "التذاكر",
+      "ticketsPlaceholder": "أدخل تذاكرك",
+      "recycledTicket": "تذكرة معاد تدويرها",
+      "deleteHead": "حذف التذكرة",
+      "deleteDescription": "هل أنت متأكد أنك تريد حذف التذكرة المحددة؟ (الاسم: {{name}})",
+      "deleteMultipleHead": "حذف التذاكر",
+      "deleteMultipleDescription": "هل أنت متأكد أنك تريد حذف التذاكر المحددة؟ (العدد: {{count}})",
+      "newTicket": "تذكرة جديدة",
+      "name": "الاسم",
+      "namePlaceholder": "أدخل اسم التذكرة",
+      "state": "الحالة",
+      "statePlaceholder": "اختر الحالة",
+      "user": "المعين",
+      "userPlaceholder": "اختر المعين",
+      "completed": "مكتملة",
+      "open": "مفتوحة",
+      "pending": "قيد الانتظار",
+      "restoreHead": "استعادة التذكرة",
+      "restoreDescription": "هل أنت متأكد أنك تريد استعادة التذكرة المحددة؟ (الاسم: {{name}})",
+      "restoreMultipleHead": "استعادة التذاكر",
+      "restoreMultipleDescription": "هل أنت متأكد أنك تريد استعادة التذاكر المحددة؟ (العدد: {{count}})",
+      "deleteHardHead": "حذف التذكرة نهائياً",
+      "deleteHardDescription": "هل أنت متأكد أنك تريد حذف التذكرة المحددة نهائياً؟ (الاسم: {{name}})",
+      "deleteHardMultipleHead": "حذف التذاكر نهائياً",
+      "deleteHardMultipleDescription": "هل أنت متأكد أنك تريد حذف التذاكر المحددة نهائياً؟ (العدد: {{count}})",
+      "remaining": "الأيام المتبقية",
+      "unassignHead": "إلغاء تعيين التذكرة",
+      "unassignDescription": "هل أنت متأكد أنك تريد إلغاء تعيين التذكرة المحددة (الاسم: {{name}}) من الموظف المحدد (الاسم: {{employee}})",
+      "unassignMultipleHead": "إلغاء تعيين التذاكر",
+      "unassignMultipleDescription": "هل أنت متأكد أنك تريد إلغاء تعيين التذاكر المحددة؟ (العدد: {{count}}) من الموظف المحدد (الاسم: {{employee}})"
+    },
+    "errors": {
+      "load": "تعذر تحميل التذاكر!",
+      "loadOne": "تعذر تحميل بيانات التذكرة",
+      "loadRecycle": "تعذر تحميل التذاكر المعاد تدويرها!",
+      "loadOneRecycle": "تعذر تحميل بيانات التذكرة المعاد تدويرها",
+      "name": "لا يمكن أن يكون الاسم أقل من حرفين",
+      "user": "اختيار مستخدم غير صالح",
+      "state": "اختيار حالة غير صالحة",
+      "new": "تعذر إنشاء تذكرة!",
+      "edit": "تعذر تعديل التذكرة!",
+      "softDeletedOne": "تعذر حذف التذكرة!",
+      "softDeleted": "تعذر حذف التذاكر!",
+      "restoreOne": "تعذر استعادة التذكرة!",
+      "restore": "تعذر استعادة التذاكر!",
+      "hardDeletedOne": "تعذر حذف التذكرة!",
+      "hardDeleted": "تعذر حذف التذاكر!",
+      "unassignOne": "تعذر إلغاء تعيين التذكرة!",
+      "unassign": "تعذر إلغاء تعيين التذاكر!",
+      "assignOne": "يجب توفير تذكرة واحدة على الأقل",
+      "assign": "تعذر تعيين التذكرة"
+    },
+    "success": {
+      "new": "تم إنشاء التذكرة بنجاح!",
+      "edit": "تم تعديل التذكرة بنجاح!",
+      "softDeletedOne": "تم حذف التذكرة بنجاح!",
+      "softDeleted": "تم حذف التذاكر بنجاح!",
+      "restoreOne": "تمت استعادة التذكرة بنجاح!",
+      "restore": "تمت استعادة التذاكر بنجاح!",
+      "hardDeletedOne": "تم حذف التذكرة نهائياً بنجاح!",
+      "hardDeleted": "تم حذف التذاكر نهائياً بنجاح!",
+      "unassignOne": "تم إلغاء تعيين التذكرة بنجاح!",
+      "unassign": "تم إلغاء تعيين التذاكر بنجاح!",
+      "assign": "تم تعيين التذاكر بنجاح!"
+    }
+  },
+  "users": {
+    "text": {
+      "employee": "موظف",
+      "manager": "مدير",
+      "managers": "المديرون",
+      "name": "الاسم",
+      "namePlaceholder": "أدخل اسم المستخدم",
+      "username": "اسم المستخدم",
+      "usernamePlaceholder": "أدخل اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل البريد الإلكتروني للمستخدم",
+      "image": "الصورة",
+      "deleteHead": "حذف المدير",
+      "deleteDescription": "هل أنت متأكد أنك تريد حذف المدير المحدد؟ (الاسم: {{name}})",
+      "deleteManagerMultipleHead": "حذف المديرين",
+      "deleteManagerMultipleDescription": "هل أنت متأكد أنك تريد حذف المديرين المحددين؟ (العدد: {{count}})",
+      "deleteEmployeeHead": "حذف الموظف",
+      "deleteEmployeeDescription": "هل أنت متأكد أنك تريد حذف الموظف المحدد؟ (الاسم: {{name}})",
+      "deleteEmployeeMultipleHead": "حذف الموظفين",
+      "deleteEmployeeMultipleDescription": "هل أنت متأكد أنك تريد حذف الموظفين المحددين؟ (العدد: {{count}})"
+    },
+    "errors": {
+      "load": "تعذر تحميل المديرين!",
+      "loadOne": "تعذر تحميل بيانات المدير",
+      "loadEmployee": "تعذر تحميل الموظفين!",
+      "loadOneEmployee": "تعذر تحميل بيانات الموظف",
+      "name": "اسم غير صالح",
+      "username": "اسم مستخدم غير صالح",
+      "email": "بريد إلكتروني غير صالح",
+      "edit": "تعذر تحديث بيانات المدير!",
+      "editEmployee": "تعذر تحديث بيانات الموظف!",
+      "create": "تعذر إنشاء مدير!",
+      "createEmployee": "تعذر إنشاء موظف!"
+    },
+    "success": {
+      "deletedOne": "تم حذف المدير بنجاح!",
+      "deleted": "تم حذف المديرين بنجاح!",
+      "deletedOneEmployee": "تم حذف الموظف بنجاح!",
+      "deletedEmployee": "تم حذف الموظفين بنجاح!",
+      "edit": "تم تحديث بيانات المدير بنجاح!",
+      "editEmployee": "تم تحديث بيانات الموظف بنجاح!",
+      "create": "تم إنشاء المدير بنجاح! يرجى التحقق من البريد الإلكتروني للمدير",
+      "createEmployee": "تم إنشاء الموظف بنجاح! يرجى التحقق من البريد الإلكتروني للموظف"
+    }
+  },
+  "plans": {
+    "text": {
+      "current": "الحالي",
+      "buy": "شراء",
+      "subscribe": "اشتراك",
+      "stop": "هل تريد التوقف عن استخدام خدماتنا؟",
+      "unsubscribe": "إلغاء الاشتراك بالبريد",
+      "pay": "دفع"
+    },
+    "errors": {
+      "load": "تعذر تحميل الخطط!",
+      "token": "تعذر الدفع حالياً!",
+      "pay": "تعذر الاشتراك في هذه الخطة!"
+    },
+    "success": {
+      "pay": "تم الاشتراك في الخطة {{plan}} بنجاح!"
+    }
+  },
+  "help": {
+    "text": {
+      "head": "دليل استخدام نظامنا"
+    }
+  },
+  "notifications": {
+    "text": {
+      "notifications": "الإشعارات",
+      "markAll": "تحديد الكل كمقروء",
+      "unassignHead": "إلغاء التعيين",
+      "unassignDescription": "تم إلغاء تعيينك من التذكرة {{name}}",
+      "assignHead": "تعيين",
+      "assignDescription": "تم تعيينك على التذكرة {{name}}",
+      "assignManyHead": "تعيين",
+      "assignManyDescription": "تم تعيينك على أكثر من تذكرة",
+
+      "ticketEditHead": "تم تحديث التذكرة",
+      "ticketEditDescription": "تم تحديث التذكرة {{name}} يرجى التحقق منها مجدداً",
+      "hardDeleteHead": "تم حذف التذكرة نهائياً",
+      "hardDeleteDescription": "تم حذف التذكرة {{name}} نهائياً",
+      "restoreHead": "تمت استعادة التذكرة",
+      "restoreDescription": "تمت استعادة التذكرة {{name}}",
+      "softDeleteHead": "تم حذف التذكرة",
+      "softDeleteDescription": "تم حذف التذكرة {{name}}",
+      "editHead": "تم تحديث البيانات",
+      "editDescription": "تم تحديث بياناتك"
+    },
+    "errors": {
+      "load": "تعذر تحميل الإشعارات!",
+      "loadCount": "تعذر تحميل عدد الإشعارات!",
+      "zero": "لم يتم العثور على إشعارات",
+      "mark": "تعذر تحديد الإشعار",
+      "markAll": "تعذر تحديد جميع الإشعارات",
+      "send": "تعذر إرسال الإشعار"
+    },
+    "success": {
+      "mark": "تم تحديد الإشعار بنجاح",
+      "markAll": "تم تحديد جميع الإشعارات بنجاح!",
+      "send": "تم إرسال الإشعار بنجاح!"
+    }
+  },
+  "chats": {
+    "text": {
+      "start": "بدء محادثة",
+      "select": "اختر محادثة لبدء المراسلة",
+      "typePlaceholder": "اكتب رسالة",
+      "chats": "المحادثات",
+      "users": "المستخدمون",
+      "search": "بحث",
+      "markAll:": "تحديد كل المحادثات كمقروءة"
+    },
+    "errors": {
+      "load": "تعذر تحميل المحادثة!",
+      "send": "فشل إرسال الرسالة",
+      "start": "تعذر بدء المحادثة",
+      "markAll": "تعذر تحديد كل المحادثات!",
+      "loadChats": "تعذر تحميل المحادثات",
+      "loadUsers": "تعذر تحميل المستخدمين"
+    },
+    "success": {
+      "start": "تم إنشاء المحادثة بنجاح!",
+      "markAll": "تم تحديد جميع المحادثات بنجاح"
+    }
+  },
+  "dashboard": {
+    "text": {
+      "totalEmployees": "إجمالي الموظفين",
+      "noTickets": "الموظفون بدون تذاكر",
+      "ticketsState": "التذاكر حسب الحالة",
+      "totalManagers": "إجمالي المديرين",
+      "totalTickets": "إجمالي التذاكر",
+      "deletedTickets": "التذاكر المحذوفة",
+      "topEmployees": "أفضل الموظفين",
+      "employees": "الموظفون",
+      "managers": "المديرون",
+      "openTickets": "التذاكر المفتوحة",
+      "pendingTickets": "التذاكر قيد الانتظار",
+      "unassignedTicekts": "التذاكر غير المعينة",
+      "open": "مفتوحة",
+      "pending": "قيد الانتظار",
+      "completed": "مكتملة",
+      "ticketCount": "عدد التذاكر",
+      "rank": "الرتبة"
+    },
+    "errors": {
+      "load": "فشل تحميل إحصائياتك"
     }
   }
 }

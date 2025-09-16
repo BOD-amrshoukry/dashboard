@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
   ...rest
 }) => {
   const baseStyles =
-    'flex justify-center items-center rounded-level1 py-[8px] cursor-pointer transition-[0.5s] min-w-[160px] px-[8px]';
+    'flex justify-center items-center rounded-level1 py-[8px] cursor-pointer duration-300 min-w-[160px] px-[8px]';
   const variantStyles = clsx(
     disabled && 'opacity-[50%]',
     variant === 'inverse'

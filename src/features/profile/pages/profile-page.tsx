@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const { t } = useTranslation();
   const breadcrumb = [{ label: t('navbar.text.profile'), href: '/profile' }];
 
-  const { data, isPending, isError } = useUser();
+  const { data, isPending, isError, refetch } = useUser();
   const updateMutation = useUpdateImage();
   const deleteMutation = useDeleteImage();
 
@@ -25,6 +25,7 @@ const ProfilePage = () => {
       <DashboardTopBar breadcrumb={breadcrumb}></DashboardTopBar>
 
       <DataDisplay
+        refetch={refetch}
         data={data}
         isLoading={isPending}
         error={isError ? t('profile.errors.load') : undefined}>

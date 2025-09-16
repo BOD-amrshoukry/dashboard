@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { getManager } from '../services/get';
 
 const useGetManager = (id: string) => {
-  const { data, isPending, isError } = useQuery({
+  const query = useQuery({
     queryKey: ['managers', id],
     queryFn: () => getManager(id),
   });
 
-  return { data, isPending, isError };
+  return query;
 };
 
 export default useGetManager;

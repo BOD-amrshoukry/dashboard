@@ -4,10 +4,15 @@ import { getCookie } from '../shared/utils/auth';
 const api = axios.create({
   baseURL: 'http://localhost:1337/api', // change this to your API endpoint
   withCredentials: true, // if you need cookies
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// api.interceptors.request.use(() => {
+//   return Promise.reject(new Error('💥 Forced request error for testing'));
+// });
 
 // Optional: request interceptor
 api.interceptors.request.use(

@@ -1,5 +1,6 @@
 import type { ChildrenType } from '../types/general';
 import Loading from './loading';
+import Refetch from './refetch';
 
 type IsLoadingType = boolean;
 type ErrorType = string | null | undefined;
@@ -16,6 +17,7 @@ const DataDisplay = <T,>({
   error,
   data,
   children,
+  refetch,
 }: DataDisplayInterface<T>) => {
   if (isLoading) {
     return <Loading />;
@@ -26,7 +28,12 @@ const DataDisplay = <T,>({
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <div className="flex items-center gap-[16px]">
+        <p>{error}</p>
+        <Refetch refetch={refetch} />
+      </div>
+    );
   }
 
   return children;

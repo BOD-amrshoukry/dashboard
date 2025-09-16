@@ -5,6 +5,8 @@ import { queryClient } from '../../lib/tanstackquery';
 import Button from './button';
 import Modal from './modal';
 import { useTranslation } from 'react-i18next';
+import { useSocket } from '../../hooks/use-socket';
+import useSendNotification from '../../features/notifications/hooks/use-send-notification';
 
 interface UserImageProps {
   imageUrl: string | null;
@@ -39,6 +41,9 @@ const UserImage: React.FC<UserImageProps> = ({
     e.target.value = '';
   };
 
+  const { socket } = useSocket();
+  const { mutate: sendNotification } = useSendNotification();
+
   const handleConfirmUpdate = async () => {
     if (selectedFile) {
       updateMutation.mutate(
@@ -50,6 +55,22 @@ const UserImage: React.FC<UserImageProps> = ({
             setSelectedFile(null);
             setPreviewUrl(null);
             toast.success(t('profile.success.imageUpdate'));
+            if (id && type === 'employees') {
+              sendNotification({
+                userId: id,
+                title: t('notifications.text.editHead'),
+                message: t('notifications.text.editDescription'),
+              });
+              if (socket) {
+                socket.emit('sendNotification', {
+                  recipientId: id,
+                  data: {
+                    title: t('notifications.text.editHead'),
+                    message: t('notifications.text.editDescription'),
+                  },
+                });
+              }
+            }
           },
           onError: () => {
             toast.error(t('profile.errors.imageUpdate'));
@@ -62,9 +83,23 @@ const UserImage: React.FC<UserImageProps> = ({
   const handleConfirmDelete = async () => {
     deleteMutation.mutate(id, {
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ['me'] });
+        queryClient.invalidateQueries({ queryKey: [type] });
         setShowDeleteModal(false);
         toast.success(t('profile.success.imageDelete'));
+        sendNotification({
+          userId: id,
+          title: t('notifications.text.editHead'),
+          message: t('notifications.text.editDescription'),
+        });
+        if (socket) {
+          socket.emit('sendNotification', {
+            recipientId: id,
+            data: {
+              title: t('notifications.text.editHead'),
+              message: t('notifications.text.editDescription'),
+            },
+          });
+        }
       },
       onError: () => {
         toast.error(t('profile.errors.imageDelete'));

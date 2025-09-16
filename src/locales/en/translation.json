@@ -36,6 +36,7 @@
       "deleteAll": "Delete All",
       "restoreAll": "Restore All",
       "unassignAll": "Unassign All",
+      "markAll": "Mark All as read",
       "save": "Save",
       "restore": "Restore",
       "unassign": "Unassign",
@@ -45,7 +46,11 @@
       "pay": "Pay",
       "left": "left",
       "total": "Total",
-      "mark": "Mark as read"
+      "mark": "Mark as read",
+      "send": "Send",
+      "start": "Start",
+      "close": "Close",
+      "count": "Count"
     },
     "pending": {
       "submitting": "Submitting...",
@@ -63,10 +68,16 @@
       "unassigning": "Unassigning",
       "assigning": "Assigning...",
       "paying": "Paying...",
-      "marking": "Marking..."
+      "marking": "Marking...",
+      "sending": "Sending...",
+      "starting": "Starting...",
+      "typing": "typing...",
+      "isTyping": "is typing...",
+      "closing": "Closing..."
     },
     "errors": {
-      "required": "This field is required"
+      "required": "This field is required",
+      "load": "Error while loading the data"
     }
   },
   "auth": {
@@ -130,22 +141,28 @@
       "logout": "Logout",
       "logo": "ShoukryBoard",
       "recycleBin": "Recycle Bin",
-      "plans": "Plans"
+      "plans": "Plans",
+      "chats": "Chats"
     }
   },
   "profile": {
     "text": {
       "name": "Name",
       "namePlaceholder": "Enter your name",
+      "email": "Email",
+      "username": "Username",
       "userType": "User Type:",
       "employee": "Employee",
       "manager": "Manager",
       "admin": "Admin",
+      "owner": "Owner",
       "previewImage": "Preview new image",
       "deleteImageHead": "Delete Image",
       "deleteImageDescription": "Are you sure you want to delete the image?",
       "deleteImage": "Delete Image",
-      "updateImage": "Update Image"
+      "updateImage": "Update Image",
+      "profile": "Profile",
+      "logout": "Logout"
     },
     "errors": {
       "name": "Invalid Name",
@@ -205,10 +222,10 @@
       "unassignMultipleDescription": "Are you sure you want to unassign the selected tickets? (count: {{count}}) from the selected employee (name: {{employee}})"
     },
     "errors": {
-      "load": "Couln't fetch tickets!",
-      "loadOne": "Couldn't fetch ticket's data",
-      "loadRecycle": "Couln't fetch recycled tickets!",
-      "loadOneRecycle": "Couldn't fetch recycled ticket's data",
+      "load": "Couldn't load tickets!",
+      "loadOne": "Couldn't load ticket's data",
+      "loadRecycle": "Couldn't load recycled tickets!",
+      "loadOneRecycle": "Couldn't load recycled ticket's data",
       "name": "Name can't be less than 2 characters",
       "user": "Invalid user selection",
       "state": "Invalid status selection",
@@ -261,10 +278,10 @@
       "deleteEmployeeMultipleDescription": "Are you sure you want to delete the selecteds employees? (count: {{count}})"
     },
     "errors": {
-      "load": "Couln't fetch Managers!",
-      "loadOne": "Couldn't fetch Manager's data",
-      "loadEmployee": "Couln't fetch Employees!",
-      "loadOneEmployee": "Couldn't fetch Employee's data",
+      "load": "Couldn't load Managers!",
+      "loadOne": "Couldn't load Manager's data",
+      "loadEmployee": "Couldn't load Employees!",
+      "loadOneEmployee": "Couldn't load Employee's data",
       "name": "Invalid Name",
       "username": "Invalide Username",
       "email": "Invalid Email",
@@ -294,7 +311,7 @@
       "pay": "Pay"
     },
     "errors": {
-      "load": "Couln't fetch plans!",
+      "load": "Couldn't load plans!",
       "token": "Couldn't pay currently!",
       "pay": "Couldn't subscribe to this plan!"
     },
@@ -310,10 +327,27 @@
   "notifications": {
     "text": {
       "notifications": "Notifications",
-      "markAll": "Mark All as read"
+      "markAll": "Mark All as read",
+      "unassignHead": "Unassignment",
+      "unassignDescription": "You have been unassigned ticket {{name}}",
+      "assignHead": "Assignment",
+      "assignDescription": "You have been assigned ticket {{name}}",
+      "assignManyHead": "Assignment",
+      "assignManyDescription": "You have been assigned +1 ticktes",
+
+      "ticketEditHead": "Ticket Updated",
+      "ticketEditDescription": "Ticket {{name}} has been updated please check it again",
+      "hardDeleteHead": "Permanantely Deleted Ticket",
+      "hardDeleteDescription": "Ticket {{name}} has been permanately deleted",
+      "restoreHead": "Restored Ticket",
+      "restoreDescription": "Ticket {{name}} has been restored deleted",
+      "softDeleteHead": "Deleted Ticket",
+      "softDeleteDescription": "Ticket {{name}} has been deleted",
+      "editHead": "Data Updated",
+      "editDescription": "Your data has been updated"
     },
     "errors": {
-      "load": "Couln't fetch notifications!",
+      "load": "Couldn't load notifications!",
       "loadCount": "Couldn't load notifications count!",
       "zero": "No Notifications found",
       "mark": "Couldn't mark notification",
@@ -324,6 +358,53 @@
       "mark": "Notification Marked sucessfully",
       "markAll": "All notifications Marked successfully!",
       "send": "Notification sent successfully!"
+    }
+  },
+  "chats": {
+    "text": {
+      "start": "Start Chat",
+      "select": "Select a chat to start messaging",
+      "typePlaceholder": "Type a message",
+      "chats": "Chats",
+      "users": "users",
+      "search": "Search",
+      "markAll:": "Mark All Chats as read"
+    },
+    "errors": {
+      "load": "Couldn't load Chat!",
+      "send": "Failed to send message",
+      "start": "Couldn't start a chat",
+      "markAll": "Couldn't read all chats!",
+      "loadChats": "Couldn't load chats",
+      "loadUsers": "Couldn't load users"
+    },
+    "success": {
+      "start": "Chat created successfully!",
+      "markAll": "All chats have neen marked"
+    }
+  },
+  "dashboard": {
+    "text": {
+      "totalEmployees": "Total Employees",
+      "noTickets": "Employees without Tickets",
+      "ticketsState": "Tickets by State",
+      "totalManagers": "Total Managers",
+      "totalTickets": "Total Tickets",
+      "deletedTickets": "Deleted Tickets",
+      "topEmployees": "Top Employees",
+      "employees": "Employees",
+      "managers": "Managers",
+      "openTickets": "Open Tickets",
+      "pendingTickets": "Pending Tickets",
+      "unassignedTicekts": "Unassigned Ticekts",
+      "open": "Open",
+      "pending": "Pending",
+      "completed": "Completed",
+      "ticketCount": "Ticket Count",
+      "rank": "Rank"
+    },
+    "errors": {
+      "load": "Failed to load your stats"
     }
   }
 }

@@ -12,6 +12,8 @@ import { BASE_URL } from '../../../shared/constants/api';
 import EmployeeForm from '../components/employee-form';
 import DataDisplay from '../../../shared/components/data-display';
 import PageHead from '../../../shared/components/page-head';
+import { useSocket } from '../../../hooks/use-socket';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
 
 const EditEmployeePage = () => {
   const { t } = useTranslation();
@@ -19,7 +21,12 @@ const EditEmployeePage = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = useCreateOrEditEmployee();
 
-  const { data, isError, isPending: isLoading } = useGetEmployee(id);
+  const { data, isError, isPending: isLoading, refetch } = useGetEmployee(id);
+
+  const { socket } = useSocket();
+  const { mutate: sendNotification } = useSendNotification();
+
+  console.log('SOCKETS', socket);
 
   const handleSubmit = (formData: any) => {
     mutate(
@@ -29,6 +36,23 @@ const EditEmployeePage = () => {
           toast.success(t('users.success.editEmployee'));
           queryClient.invalidateQueries({ queryKey: ['employees'] });
           navigate(`/employees/${id}`);
+          if (id) {
+            sendNotification({
+              userId: id,
+              title: t('notifications.text.editHead'),
+              message: t('notifications.text.editDescription'),
+            });
+            if (socket) {
+              console.log('MY SOCL');
+              socket.emit('sendNotification', {
+                recipientId: id,
+                data: {
+                  title: t('notifications.text.editHead'),
+                  message: t('notifications.text.editDescription'),
+                },
+              });
+            }
+          }
         },
         onError: () => toast.error(t('users.errors.editEmployee')),
       },
@@ -61,6 +85,7 @@ const EditEmployeePage = () => {
       <DataDisplay
         data={data}
         isLoading={isLoading}
+        refetch={refetch}
         error={isError ? t('users.errors.loadOneEmployee') : undefined}>
         <PageHead
           head={`${t('general.text.edit')} ${t('users.text.employee')} (${

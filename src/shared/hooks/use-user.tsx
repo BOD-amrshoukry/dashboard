@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { getMe } from '../services/get';
 
 const useUser = () => {
-  const { data, isPending, isError } = useQuery({
+  const query = useQuery({
     queryKey: ['me'],
     queryFn: () => getMe(),
   });
 
-  return { data, isPending, isError };
+  return query;
 };
 
 export default useUser;

@@ -10,9 +10,9 @@ const SettingsGuest = () => {
   const [modalData, setModalData] = useState({});
 
   return (
-    <div className="h-[40px] mt-[16px]">
+    <div className="h-[40px] my-[16px]">
       <button
-        className="rounded-full p-[8px] bg-second-background cursor-pointer"
+        className="rounded-full p-[8px] bg-second-background shadow-[0_10px_30px_rgba(0,0,0,0.2)]  cursor-pointer z-50"
         onClick={() => setIsOpen(true)}>
         <Settings stroke="var(--color-main)" />
       </button>

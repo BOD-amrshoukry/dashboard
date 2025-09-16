@@ -4,7 +4,7 @@ import type { Ticket } from '../types/type';
 
 export async function fetchTickets(
   params: FetchParams,
-  options?: { userId?: string; unAssigned?: boolean },
+  options?: { userId?: string; unAssigned?: boolean; userType?: string },
 ): Promise<FetchResult<Ticket>> {
   const query: any = {
     'pagination[page]': params.pageIndex + 1, // Strapi is 1-based
@@ -14,6 +14,7 @@ export async function fetchTickets(
   };
 
   console.log('PARARMSSS', params);
+  console.log('optionss', options);
 
   // Sorting
   if (params.sortBy) {
@@ -45,6 +46,10 @@ export async function fetchTickets(
 
   if (options?.unAssigned) {
     query['filters[user][id][$null]'] = true;
+  }
+
+  if (options?.userType) {
+    query['filters[user][type][$eq]'] = options.userType; // <-- key part
   }
 
   // Fetch from Strapi

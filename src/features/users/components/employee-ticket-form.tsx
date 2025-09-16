@@ -12,6 +12,8 @@ import Button from '../../../shared/components/button';
 import PaginatedDatalist from '../../../shared/components/paginated-datalist';
 import { fetchTickets } from '../../tickets/services/get';
 import { useEffect } from 'react';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
+import { useSocket } from '../../../hooks/use-socket';
 
 const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
   const { t } = useTranslation();
@@ -31,6 +33,9 @@ const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
     },
   });
 
+  const { mutate: sendNotification } = useSendNotification();
+  const { socket } = useSocket();
+
   const onSubmit = (data: EmployeeTicketFormData) => {
     mutate(
       { ids: data.tickets, userId: id },
@@ -40,6 +45,22 @@ const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           queryClient.invalidateQueries({ queryKey: ['employees'] });
           setIsEnabled(false);
+          if (id) {
+            sendNotification({
+              userId: id,
+              title: t('notifications.text.assignManyHead'),
+              message: t('notifications.text.assignManyDescription'),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: id,
+                data: {
+                  title: t('notifications.text.assignManyHead'),
+                  message: t('notifications.text.assignManyDescription'),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.assign')),
       },
@@ -80,7 +101,7 @@ const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
               )}
             />
           </div>
-          <div className="flex items-center gap-[24px]">
+          <div className="flex items-center gap-[16px] flex-wrap">
             <Button
               disabled={isPending}
               variant="inverse"

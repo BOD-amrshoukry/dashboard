@@ -19,11 +19,13 @@ export const markAllAsRead = (id) => {
 };
 
 export const sendNotification = (payload) => {
+  console.log('PAYLOAD IS', payload);
   return api
     .post(`/push-subscriptions/notify-user`, {
       userId: payload.userId,
-      title: payload.head,
-      message: payload.description,
+      title: payload.title,
+      message: payload.message,
     })
-    .then((res) => res.data);
+    .then((res) => res.message);
 };
+

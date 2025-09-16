@@ -82,20 +82,20 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
               </div>
 
               {showHidden && hiddenItems.length > 0 && (
-                <div className="absolute left-0 mt-2 w-[180px] max-h-[320px] overflow-auto bg-second-background rounded-lg shadow-lg z-50">
+                <div className="absolute left-0 mt-2 w-[164px] max-h-[320px] overflow-auto bg-second-background rounded-lg shadow-lg z-50">
                   <ul className="py-2">
                     {hiddenItems.map((hidden, hIdx) => (
                       <li key={hIdx}>
                         {hidden.href ? (
                           <Link
                             to={hidden.href}
-                            className="block px-4 py-2 text-main-text hover:bg-main-background truncate max-w-[180px]"
+                            className="block px-4 py-2 text-main-text hover:bg-main-background truncate max-w-[132px] sm:max-w-[180px]"
                             title={hidden.label}>
                             {hidden.label}
                           </Link>
                         ) : (
                           <span
-                            className="block px-4 py-2 text-main-text truncate max-w-[180px]"
+                            className="block px-4 py-2 text-main-text truncate max-w-[132px] sm:max-w-[180px]"
                             title={hidden.label}>
                             {hidden.label}
                           </span>
@@ -115,14 +115,14 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
               <Link
                 to={item.href}
                 className={clsx(
-                  'truncate max-w-[180px] text-main-text hover:underline',
+                  'truncate max-w-[132px] sm:max-w-[180px] text-main-text hover:underline',
                 )}
                 title={item.label}>
                 {item.label}
               </Link>
             ) : (
               <span
-                className="truncate max-w-[180px] text-main font-medium"
+                className="truncate max-w-[132px] sm:max-w-[180px] text-main font-medium"
                 title={item.label}>
                 {item.label}
               </span>

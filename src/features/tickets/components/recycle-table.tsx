@@ -16,6 +16,8 @@ import Button from '../../../shared/components/button';
 import { fetchRecycledTickets, fetchTickets } from '../services/get';
 import useRestoreTicket from '../hooks/use-restore-ticket';
 import useRestoreTickets from '../hooks/use-restore-tickets';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
+import { useSocket } from '../../../hooks/use-socket';
 
 export default function RecycleTable() {
   const navigate = useNavigate();
@@ -172,6 +174,9 @@ export default function RecycleTable() {
     isError: isErrorRestoreTickets,
   } = useRestoreTickets();
 
+  const { mutate: sendNotification } = useSendNotification();
+  const { socket } = useSocket();
+
   const handleSubmit = () => {
     if (modalData?.type === 'single' && modalData.action === 'delete') {
       hardDeleteTicketMutate(modalData?.ids, {
@@ -179,6 +184,26 @@ export default function RecycleTable() {
           toast.success(t('tickets.success.hardDeletedOne'));
           queryClient.invalidateQueries({ queryKey: ['recycle'] });
           setIsOpenModal(false);
+          if (modalData?.value.user.id) {
+            sendNotification({
+              userId: modalData?.value.user.id,
+              title: t('notifications.text.hardDeleteHead'),
+              message: t('notifications.text.hardDeleteDescription', {
+                name: modalData?.value?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: modalData?.value?.user?.id,
+                data: {
+                  title: t('notifications.text.hardDeleteHead'),
+                  message: t('notifications.text.hardDeleteDescription', {
+                    name: modalData?.value?.name,
+                  }),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.hardDeletedOne')),
       });
@@ -201,6 +226,26 @@ export default function RecycleTable() {
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           queryClient.invalidateQueries({ queryKey: ['recycle'] });
           setIsOpenModal(false);
+          if (modalData?.value.user.id) {
+            sendNotification({
+              userId: modalData?.value.user.id,
+              title: t('notifications.text.restoreHead'),
+              message: t('notifications.text.restoreDescription', {
+                name: modalData?.value?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: modalData?.value?.user?.id,
+                data: {
+                  title: t('notifications.text.restoreHead'),
+                  message: t('notifications.text.restoreDescription', {
+                    name: modalData?.value?.name,
+                  }),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.restoreOne')),
       });

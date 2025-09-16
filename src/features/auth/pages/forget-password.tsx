@@ -55,7 +55,7 @@ const ForgetPasswordPage = () => {
     <div className="bg-main-background w-full min-h-screen flex">
       <div className="flex-1 min-h-screen container">
         <SettingsGuest />
-        <div className="flex justify-center items-center container sm:p-[64px] h-[calc(100vh-56px)]">
+        <div className="flex justify-center items-center container sm:p-[64px] pb-[32px] min-h-[calc(100vh-56px)]">
           <div className="bg-second-background w-full p-[32px] rounded-level1">
             {step === 1 && (
               <form onSubmit={handleSubmit(onSubmit, onInvalid)}>

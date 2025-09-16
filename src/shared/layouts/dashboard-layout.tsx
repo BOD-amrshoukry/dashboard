@@ -10,7 +10,8 @@ import {
   X,
   Trash2,
   StretchHorizontal,
-  CircleQuestionMark, // add the X icon from lucide-react
+  CircleQuestionMark,
+  MessageCircleMore, // add the X icon from lucide-react
 } from 'lucide-react';
 import useSidebarStore from '../store/use-sidebar-store';
 import { useTranslation } from 'react-i18next';
@@ -23,78 +24,135 @@ import useGetNotificationsCount from '../../features/notifications/hooks/use-get
 import { decodeJwt, getCookie } from '../utils/auth';
 import NotificationsIcon from '../components/notification-icon';
 import PushNotification from '../../components/push-notification';
+import useGetUnreadAllCountChats from '../../features/chats/hooks/use-get-unread-all-count';
+import ChatsIcon from '../components/chat-icon';
+import useGetAllUserChats from '../../features/chats/hooks/use-get-all-user-chats';
+import { useSocket } from '../../hooks/use-socket';
+import { queryClient } from '../../lib/tanstackquery';
+import { useTypingStore } from '../store/use-typing-store';
+import toast from 'react-hot-toast';
+import useNavbar from '../hooks/use-navbar';
+import Loading from '../components/loading';
+import RouteWatcher from '../components/route-watcher';
 
 const DashboardLayout = () => {
   const { isExpanded, toggleSidebar } = useSidebarStore();
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const isRTL = i18n.dir() === 'rtl';
-  const id = decodeJwt(String(getCookie('token'))).id;
+  const token = decodeJwt(String(getCookie('token')));
+  const id = token.id;
+  const isOwnerManager = token.type === 'owner' || token.type === 'manager';
+  const isOwner = token.type === 'owner';
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const { socket } = useSocket();
+  const {
+    isPending: isPendingAllChats,
+    data: chats,
+    isError: isErrorAllChats,
+  } = useGetAllUserChats();
+
+  // const { typingUsers, setTypingUsers } = useTypingStore();
+  const typingUsers = useTypingStore((state) => state.typingUsers);
+  const addTypingUser = useTypingStore((state) => state.addTypingUser);
+  const removeTypingUser = useTypingStore((state) => state.removeTypingUser);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    console.log('Typing users from store:', typingUsers);
+  }, [typingUsers]);
+
+  useEffect(() => {
+    console.log('isEpanded from store:', isExpanded);
+  }, [isExpanded]);
+
+  const allChats = chats?.data;
+
+  useEffect(() => {
+    if (!socket || !allChats) return;
+
+    socket.on('receiveNotification', (notif) => {
+      console.log('notif', notif);
+      console.log('id', id);
+
+      if (notif.recipientId == id) {
+        queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        toast.custom((to) => (
+          <div
+            className={`${
+              to.visible ? 'animate-custom-enter' : 'animate-custom-leave'
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}>
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 pt-0.5">🔔</div>
+                <div className="ml-3 flex-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    {notif.title}
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">{notif.message}</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-gray-200">
+              <button
+                onClick={() => toast.dismiss(to.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                {t('general.text.close')}
+              </button>
+            </div>
+          </div>
+        ));
+      }
+      // You can also update a Zustand store or React state here
+    });
+
+    socket.emit('joinNotificationRoom');
+
+    // Join all chat rooms
+    allChats.forEach((chat) => {
+      socket.emit('joinChat', chat.id);
+    });
+
+    // Listen for incoming messages in any chat
+    socket.on('receiveMessage', (msg) => {
+      console.log('Received message in chat:', msg.chat);
+      queryClient.invalidateQueries({ queryKey: ['chats'] }); // update chat list
+    });
+
+    // Listen for typing events in any chat
+    socket.on('userTyping', ({ user }) => {
+      if (user.id !== id && !typingUsers?.some((u) => u.id === user.id)) {
+        addTypingUser(user);
+      }
+    });
+
+    socket.on('userStopTyping', ({ user }) => {
+      console.log('REMOO');
+      removeTypingUser(user);
+    });
+
+    return () => {
+      socket.off('receiveMessage');
+      socket.off('userTyping');
+      socket.off('userStopTyping');
+    };
+  }, [socket, allChats]);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const {
-    data: notificationsData,
-    isError,
-    isPending,
-  } = useGetNotificationsCount(id);
-
-  const data = [
-    {
-      icon: <LayoutDashboard />,
-      href: '/dashboard',
-      text: t('navbar.text.dashboard'),
-    },
-    { icon: <Ticket />, href: '/tickets', text: t('navbar.text.tickets') },
-    {
-      icon: <ShieldUser />,
-      href: '/managers',
-      text: t('navbar.text.managers'),
-    },
-    { icon: <Users />, href: '/employees', text: t('navbar.text.employees') },
-    {
-      icon: <CircleUserRound />,
-      href: '/profile',
-      text: t('navbar.text.profile'),
-    },
-    {
-      icon: (
-        <NotificationsIcon unreadCount={notificationsData?.data?.unreadCount} />
-      ),
-      href: '/notifications',
-      text: t('navbar.text.notifications'),
-    },
-    {
-      icon: <StretchHorizontal />,
-      href: '/plans',
-      text: t('navbar.text.plans'),
-    },
-
-    { icon: <Settings />, href: '/settings', text: t('navbar.text.settings') },
-    {
-      icon: <Trash2 />,
-      href: '/recycle-bin',
-      text: t('navbar.text.recycleBin'),
-    },
-    {
-      icon: <CircleQuestionMark />,
-      href: '/help',
-      text: t('navbar.text.help'),
-    },
-  ];
+  const { data, isPendingMe } = useNavbar();
 
   return (
     <>
       {/* Mobile overlay */}
       {isMobile && isExpanded && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 transition-opacity duration-300"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[100] transition-opacity duration-300"
           onClick={toggleSidebar}
         />
       )}
@@ -102,7 +160,7 @@ const DashboardLayout = () => {
       {/* Sidebar */}
       <aside
         className={clsx(
-          'flex flex-col fixed min-h-screen p-[12px] z-[990] transition-transform duration-300',
+          'flex flex-col fixed min-h-screen p-[12px] z-[100] transition-transform duration-300',
           isMobile && 'bg-second-background',
           isMobile
             ? isExpanded
@@ -126,7 +184,7 @@ const DashboardLayout = () => {
             <button
               onClick={toggleSidebar}
               className={clsx(
-                'absolute top-[28px]  p-2 rounded-full hover:bg-nav-hover transition-[0.5s] cursor-pointer',
+                'absolute top-[28px]  p-2 rounded-full hover:bg-nav-hover duration-300 cursor-pointer',
                 isRTL ? 'left-4' : 'right-4',
               )}>
               <X size={20} />
@@ -134,18 +192,19 @@ const DashboardLayout = () => {
           )}
 
           <div>
-            <div className="p-[16px]">
+            <div className="p-[16px] h-[64px] ">
               <h2 className="text-[24px] font-bold text-main">
                 {t('navbar.text.logo')}
               </h2>
             </div>
-            <ul className="flex flex-col gap-[8px] px-[8px] mt-4">
+            <ul className="flex flex-col gap-[8px] px-[8px] mt-4 max-h-[calc(100vh-64px-64px-64px-16px)] overflow-y-auto">
+              {/* {isPendingMe && <Loading />} */}
               {data.map((item) => (
                 <li key={item.href}>
                   <Link
                     to={item.href}
                     className={clsx(
-                      'flex items-center gap-[8px] px-[8px] py-[8px] rounded-level1 transition-[0.5s]',
+                      'flex items-center gap-[8px] px-[8px] py-[8px] rounded-level1 duration-300',
                       location.pathname === item.href
                         ? 'bg-main text-text-secondary'
                         : 'hover:bg-nav-hover',
@@ -158,6 +217,7 @@ const DashboardLayout = () => {
               ))}
             </ul>
           </div>
+          <RouteWatcher />
 
           <UserDetailsSidebar isMobile={isMobile} />
         </div>
@@ -167,13 +227,13 @@ const DashboardLayout = () => {
         className={clsx(
           'transition-all duration-300',
           'min-h-[calc(100vh-32px)]',
-          'pt-[96px] pb-[32px]',
+          'pt-[96px]',
           isRTL
             ? isExpanded
-              ? 'pr-[336px] pl-[12px]'
+              ? 'pr-[336px] pl-[16px]'
               : 'pr-[16px] pl-[16px]'
             : isExpanded
-            ? 'pl-[336px] pr-[12px]'
+            ? 'pl-[336px] pr-[16px]'
             : 'pl-[16px] pr-[16px]',
         )}>
         <Outlet />

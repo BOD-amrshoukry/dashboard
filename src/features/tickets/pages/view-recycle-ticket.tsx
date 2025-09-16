@@ -13,13 +13,20 @@ import useRestoreTicket from '../hooks/use-restore-ticket';
 import toast from 'react-hot-toast';
 import { queryClient } from '../../../lib/tanstackquery';
 import useHardDeleteTicket from '../hooks/use-hard-delete-ticket';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
+import { useSocket } from '../../../hooks/use-socket';
 
 const ViewRecycleTicket = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isError, isPending: isLoading } = useGetRecycledTicket(id);
+  const {
+    data,
+    isError,
+    isPending: isLoading,
+    refetch,
+  } = useGetRecycledTicket(id);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalData, setModalData] = useState({});
 
@@ -38,6 +45,9 @@ const ViewRecycleTicket = () => {
   const isPendingCondition =
     isPendingHardDeleteTicket || isPendingRestoreTicket;
 
+  const { mutate: sendNotification } = useSendNotification();
+  const { socket } = useSocket();
+
   const handleSubmit = () => {
     if (modalData?.action === 'delete') {
       hardDeleteTicketMutate(modalData?.id, {
@@ -46,6 +56,27 @@ const ViewRecycleTicket = () => {
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           setIsOpenModal(false);
           navigate(`/recycle-bin`);
+
+          if (modalData?.value.user.id) {
+            sendNotification({
+              userId: modalData?.value.user.id,
+              title: t('notifications.text.hardDeleteHead'),
+              message: t('notifications.text.hardDeleteDescription', {
+                name: modalData?.value?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: modalData?.value?.user?.id,
+                data: {
+                  title: t('notifications.text.hardDeleteHead'),
+                  message: t('notifications.text.hardDeleteDescription', {
+                    name: modalData?.value?.name,
+                  }),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.hardDeletedOne')),
       });
@@ -56,6 +87,26 @@ const ViewRecycleTicket = () => {
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           setIsOpenModal(false);
           navigate(`/tickets/${id}`);
+          if (modalData?.value.user.id) {
+            sendNotification({
+              userId: modalData?.value.user.id,
+              title: t('notifications.text.restoreHead'),
+              message: t('notifications.text.restoreDescription', {
+                name: modalData?.value?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: modalData?.value?.user?.id,
+                data: {
+                  title: t('notifications.text.restoreHead'),
+                  message: t('notifications.text.restoreDescription', {
+                    name: modalData?.value?.name,
+                  }),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.restore')),
       });
@@ -80,6 +131,7 @@ const ViewRecycleTicket = () => {
       <DataDisplay
         data={data}
         isLoading={isLoading}
+        refetch={refetch}
         error={isError ? t('tickets.errors.loadOneRecycle') : undefined}>
         <div className="flex gap-[24px] items-center mb-[32px] flex-wrap">
           <PageHead
@@ -153,37 +205,37 @@ const ViewRecycleTicket = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('tickets.text.name')}
             </span>
-            <span className="text-base text-gray-900">
+            <span className="text-base text-main-text">
               {data?.data?.name || '-'}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('tickets.text.state')}
             </span>
-            <span className="text-base text-gray-900">
+            <span className="text-base text-main-text">
               {data?.data?.state || '-'}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('users.text.employee')}
             </span>
-            <span className="text-base text-gray-900">
+            <span className="text-base text-main-text">
               {data?.data?.user?.name || '-'}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('tickets.text.remaining')}
             </span>
-            <span className="text-base text-gray-900">{remaining}</span>
+            <span className="text-base text-main-text">{remaining}</span>
           </div>
         </div>
       </DataDisplay>

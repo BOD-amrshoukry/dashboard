@@ -9,33 +9,44 @@ import {
   Legend,
 } from 'recharts';
 import { useParams } from 'react-router-dom';
+import DashboardCard from '../../../shared/components/dashboard-card';
+import ChartTooltip from '../../../shared/components/chart-tooltip';
 
-const EmployeeStats = () => {
+const EmployeeStats = ({ userId }) => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const { isError, isPending, data } = useGetEmployeeStats(id);
+  const finalId = userId || id;
+  const { isError, isPending, data } = useGetEmployeeStats(finalId);
 
   const ticketStateData = data?.ticketsByState.map((t: any) => ({
     name: t.state,
     value: t.count,
   }));
 
-  const COLORS = ['#60a5fa', '#facc15', '#f87171']; // colors for open/pending/closed
+  const COLORS = [
+    'var(--color-main)',
+    'var(--color-main-hover)',
+    'var(--color-disabled)',
+  ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Total Tickets */}
 
       <div className="grid grid-cols-1 gap-6">
-        <div className="bg-white p-4 rounded-2xl shadow text-center">
-          <h3 className="text-lg font-semibold mb-2">Total Tickets</h3>
+        <DashboardCard className={'lg:col-span-2'}>
+          <h3 className="text-lg font-semibold mb-2">
+            {t('dashboard.text.totalTickets')}
+          </h3>
           <p className="text-3xl font-bold">{data?.totalTickets}</p>
-        </div>
+        </DashboardCard>
 
-        <div className="bg-white p-4 rounded-2xl shadow text-center">
-          <h3 className="text-lg font-semibold mb-2">Rank</h3>
+        <DashboardCard className={'lg:col-span-2'}>
+          <h3 className="text-lg font-semibold mb-2">
+            {t('dashboard.text.rank')}
+          </h3>
           <p className="text-3xl font-bold">{data?.rank}</p>
-        </div>
+        </DashboardCard>
       </div>
       {/* Deleted Tickets */}
       {/* <div className="bg-white p-4 rounded-2xl shadow text-center">
@@ -50,9 +61,9 @@ const EmployeeStats = () => {
       </div> */}
 
       {/* Tickets by State */}
-      <div className="bg-white p-4 rounded-2xl shadow lg:col-span-2">
+      <DashboardCard className={'lg:col-span-2'}>
         <h3 className="text-lg font-semibold mb-4 text-center">
-          Tickets by State
+          {t('dashboard.text.ticketsState')}
         </h3>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -63,22 +74,47 @@ const EmployeeStats = () => {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={120}
-                fill="#8884d8"
-                label>
-                {ticketStateData?.map((entry: any, index: number) => (
+                outerRadius={100}
+                fill="green"
+                label={({
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  percent,
+                  value,
+                }) => {
+                  const radius = innerRadius + (outerRadius - innerRadius) / 2;
+                  const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
+                  const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
+
+                  return (
+                    <text
+                      x={x}
+                      y={y}
+                      fill="var(--color-second-background)"
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fontSize={12}
+                      fontWeight="bold">
+                      {`${value} (${(percent * 100).toFixed(0)}%)`}
+                    </text>
+                  );
+                }}>
+                {ticketStateData?.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
                   />
                 ))}
               </Pie>
-              <Tooltip />
+              <ChartTooltip />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </DashboardCard>
     </div>
   );
 };

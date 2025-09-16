@@ -1,22 +1,18 @@
-import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import { useEffect, useState, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { socket } from '../lib/socket';
 
-export const useSocket = (userId: number) => {
+interface Notification {
+  message: string;
+  title?: string;
+}
+
+export const useSocket = () => {
   const [connected, setConnected] = useState(false);
-  const [notifications, setNotifications] = useState<
-    { message: string; title?: string }[]
-  >([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    const socket = io('http://localhost:1337', { transports: ['websocket'] });
-
-    socket.on('connect', () => {
-      console.log('Connected to Socket.IO', socket.id);
-      setConnected(true);
-      socket.emit('joinRoom', userId);
-    });
-
-    socket.on('notification', (data) => {
+    socket.on('notification', (data: Notification) => {
       console.log('Received notification', data);
       setNotifications((prev) => [...prev, data]);
     });
@@ -24,12 +20,8 @@ export const useSocket = (userId: number) => {
     socket.on('connect_error', (err) => {
       console.error('Socket.IO connection error', err);
     });
+  }, []);
 
-    return () => {
-      socket.disconnect();
-    };
-  }, [userId]);
-
-  return { connected, notifications };
+  return { connected, notifications, socket };
 };
 

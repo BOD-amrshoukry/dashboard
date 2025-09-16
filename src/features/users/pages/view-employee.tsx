@@ -22,7 +22,7 @@ const ViewEmployeePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isError, isPending: isLoading } = useGetEmployee(id);
+  const { data, isError, isPending: isLoading, refetch } = useGetEmployee(id);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -59,6 +59,7 @@ const ViewEmployeePage = () => {
       <DataDisplay
         data={data}
         isLoading={isLoading}
+        refetch={refetch}
         error={isError ? t('users.errors.loadOne') : undefined}>
         <div className="flex gap-[24px] items-center mb-[32px] flex-wrap">
           <PageHead
@@ -127,26 +128,28 @@ const ViewEmployeePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('users.text.name')}
             </span>
-            <span className="text-base text-gray-900">{data?.name || '-'}</span>
+            <span className="text-base text-main-text">
+              {data?.name || '-'}
+            </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('users.text.username')}
             </span>
-            <span className="text-base text-gray-900">
+            <span className="text-base text-main-text">
               {data?.username || '-'}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-main-text-helper">
               {t('users.text.email')}
             </span>
-            <span className="text-base text-gray-900">
+            <span className="text-base text-main-text">
               {data?.email || '-'}
             </span>
           </div>

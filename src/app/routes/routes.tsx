@@ -26,6 +26,11 @@ import ViewEmployeePage from '../../features/users/pages/view-employee';
 import PlansPage from '../../features/plans/pages/plans';
 import HelpPage from '../../features/dashboard/pages/help-page';
 import NotificationsPage from '../../features/notifications/pages/notifications';
+import ChatsPage from '../../features/chats/pages/chats';
+import DashboardMarginLayout from '../../shared/layouts/dashboard-margin-layout';
+import OwnerRoutes from './owner-routes';
+import OwnerManagerRoutes from './manager-routes';
+import MarginLayout from '../../shared/layouts/dashboard-margin-layout';
 
 const AppRoutes = () => {
   return (
@@ -39,35 +44,49 @@ const AppRoutes = () => {
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
-            <Route path="/" element={<Navigate to={'/dashboard'} />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route element={<MarginLayout />}>
+              <Route path="/" element={<Navigate to={'/dashboard'} />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
 
-            <Route path="/tickets" element={<TicketsPage />} />
-            <Route path="/tickets/new" element={<NewTicketPage />} />
-            <Route path="/tickets/:id" element={<ViewTicketPage />} />
-            <Route path="/tickets/:id/edit" element={<EditTicketPage />} />
+              <Route path="/tickets" element={<TicketsPage />} />
+              <Route path="/tickets/new" element={<NewTicketPage />} />
+              <Route path="/tickets/:id" element={<ViewTicketPage />} />
+              <Route path="/tickets/:id/edit" element={<EditTicketPage />} />
 
-            <Route path="/recycle-bin" element={<RecycleBinPage />} />
-            <Route path="/recycle-bin/:id" element={<ViewRecycleTicket />} />
+              <Route element={<OwnerManagerRoutes />}>
+                <Route path="/employees" element={<EmployeesPage />} />
+                <Route path="/employees/new" element={<NewEmployeePage />} />
+                <Route path="/employees/:id" element={<ViewEmployeePage />} />
+                <Route
+                  path="/employees/:id/edit"
+                  element={<EditEmployeePage />}
+                />
 
-            <Route path="/managers" element={<ManagersPage />} />
-            <Route path="/managers/new" element={<NewManagerPage />} />
-            <Route path="/managers/:id" element={<ViewManagerPage />} />
-            <Route path="/managers/:id/edit" element={<EditManagerPage />} />
+                <Route path="/recycle-bin" element={<RecycleBinPage />} />
+                <Route
+                  path="/recycle-bin/:id"
+                  element={<ViewRecycleTicket />}
+                />
+              </Route>
 
-            <Route path="/employees" element={<EmployeesPage />} />
-            <Route path="/employees/new" element={<NewEmployeePage />} />
-            <Route path="/employees/:id" element={<ViewEmployeePage />} />
-            <Route path="/employees/:id/edit" element={<EditEmployeePage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
 
-            <Route path="/notifications" element={<NotificationsPage />} />
+              <Route element={<OwnerRoutes />}>
+                <Route path="/plans" element={<PlansPage />} />
+                <Route path="/managers" element={<ManagersPage />} />
+                <Route path="/managers/new" element={<NewManagerPage />} />
+                <Route path="/managers/:id" element={<ViewManagerPage />} />
+                <Route
+                  path="/managers/:id/edit"
+                  element={<EditManagerPage />}
+                />
+              </Route>
+              <Route path="/help" element={<HelpPage />} />
 
-            <Route path="/plans" element={<PlansPage />} />
-
-            <Route path="/help" element={<HelpPage />} />
-
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Route>
+            <Route path="/chats" element={<ChatsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

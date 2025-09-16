@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import type { Column } from '../../tables/types/table';
+import type { Column, FetchParams } from '../../tables/types/table';
 import type { Ticket } from '../types/type';
 import { useState } from 'react';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
@@ -15,12 +15,26 @@ import Modal from '../../../shared/components/modal';
 import Button from '../../../shared/components/button';
 import { fetchTickets } from '../services/get';
 import useTicketStates from '../hooks/use-ticket-states';
+import useSendNotification from '../../notifications/hooks/use-send-notification';
+import { useSocket } from '../../../hooks/use-socket';
+import useUser from '../../../shared/hooks/use-user';
+import DataDisplay from '../../../shared/components/data-display';
 
 export default function TicketsTable() {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
   const options = useTicketStates();
+  const {
+    isPending: myPending,
+    data: myData,
+    isError: myError,
+    refetch,
+  } = useUser();
+  const isEmployee = myData?.type === 'employee';
+  const id = myData?.id;
+
+  console.log('MYDATA', myData);
 
   const columns: Column<Ticket>[] = [
     {
@@ -55,58 +69,73 @@ export default function TicketsTable() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalData, setModalData] = useState({});
 
-  const rowActions = [
-    {
-      label: t('general.text.view'),
-      icon: <Eye />,
-      onClick: (row: Ticket) => navigate(`/tickets/${row.documentId}`),
-    },
-    {
-      label: t('general.text.edit'),
-      icon: <Pencil />,
-      onClick: (row: Ticket) => navigate(`/tickets/${row.documentId}/edit`),
-    },
-    {
-      label: t('general.text.delete'),
-      icon: <Trash2 />,
-      color: 'red',
-      onClick: (row: Ticket) => {
-        setModalData({
-          head: t('tickets.text.deleteHead'),
-          description: t('tickets.text.deleteDescription', {
-            name: row.name,
-          }),
-          type: 'single',
-          action: 'delete',
-          value: row,
-          ids: row.documentId,
-        });
-        setIsOpenModal(true);
-      },
-      disabled: (row: Ticket, selectedKeys: Set<string | number>) =>
-        selectedKeys.size > 1,
-    },
-  ];
+  const rowActions = isEmployee
+    ? [
+        {
+          label: t('general.text.view'),
+          icon: <Eye />,
+          onClick: (row: Ticket) => navigate(`/tickets/${row.documentId}`),
+        },
+        {
+          label: t('general.text.edit'),
+          icon: <Pencil />,
+          onClick: (row: Ticket) => navigate(`/tickets/${row.documentId}/edit`),
+        },
+      ]
+    : [
+        {
+          label: t('general.text.view'),
+          icon: <Eye />,
+          onClick: (row: Ticket) => navigate(`/tickets/${row.documentId}`),
+        },
+        {
+          label: t('general.text.edit'),
+          icon: <Pencil />,
+          onClick: (row: Ticket) => navigate(`/tickets/${row.documentId}/edit`),
+        },
+        {
+          label: t('general.text.delete'),
+          icon: <Trash2 />,
+          color: 'red',
+          onClick: (row: Ticket) => {
+            setModalData({
+              head: t('tickets.text.deleteHead'),
+              description: t('tickets.text.deleteDescription', {
+                name: row.name,
+              }),
+              type: 'single',
+              action: 'delete',
+              value: row,
+              ids: row.documentId,
+            });
+            setIsOpenModal(true);
+          },
+          disabled: (row: Ticket, selectedKeys: Set<string | number>) =>
+            selectedKeys.size > 1,
+        },
+      ];
 
-  const bulkActions = [
-    {
-      label: t('general.text.deleteAll'),
-      icon: <Trash2 />,
-      onClick: (rows: Ticket[]) => {
-        setModalData({
-          head: t('tickets.text.deleteMultipleHead'),
-          description: t('tickets.text.deleteMultipleDescription', {
-            count: rows.length,
-          }),
-          type: 'multiple',
-          action: 'delete',
-          value: rows,
-          ids: rows.map((row) => row?.documentId),
-        });
-        setIsOpenModal(true);
-      },
-    },
-  ];
+  const bulkActions = isEmployee
+    ? null
+    : [
+        {
+          label: t('general.text.deleteAll'),
+          icon: <Trash2 />,
+          onClick: (rows: Ticket[]) => {
+            setModalData({
+              head: t('tickets.text.deleteMultipleHead'),
+              description: t('tickets.text.deleteMultipleDescription', {
+                count: rows.length,
+              }),
+              type: 'multiple',
+              action: 'delete',
+              value: rows,
+              ids: rows.map((row) => row?.documentId),
+            });
+            setIsOpenModal(true);
+          },
+        },
+      ];
 
   const {
     mutate: softDeleteTicketMutate,
@@ -119,6 +148,9 @@ export default function TicketsTable() {
     isError: isErrorSoftDeleteTickets,
   } = useSoftDeleteTickets();
 
+  const { mutate: sendNotification } = useSendNotification();
+  const { socket } = useSocket();
+
   const handleSubmit = () => {
     if (modalData?.type === 'single') {
       softDeleteTicketMutate(modalData?.ids, {
@@ -127,6 +159,26 @@ export default function TicketsTable() {
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           queryClient.invalidateQueries({ queryKey: ['recycle'] });
           setIsOpenModal(false);
+          if (modalData?.value.user.id) {
+            sendNotification({
+              userId: modalData?.value.user.id,
+              title: t('notifications.text.softDeleteHead'),
+              message: t('notifications.text.softDeleteDescription', {
+                name: modalData?.value?.name,
+              }),
+            });
+            if (socket) {
+              socket.emit('sendNotification', {
+                recipientId: modalData?.value?.user?.id,
+                data: {
+                  title: t('notifications.text.softDeleteHead'),
+                  message: t('notifications.text.softDeleteDescription', {
+                    name: modalData?.value?.name,
+                  }),
+                },
+              });
+            }
+          }
         },
         onError: (err) => toast.error(t('tickets.errors.softDeletedOne')),
       });
@@ -146,19 +198,37 @@ export default function TicketsTable() {
   const isPendingCondition =
     isPendingSoftDeleteTicket || isPendingSoftDeleteTickets;
 
+  const fetchTicketsForRole = (params: FetchParams, options?: any) => {
+    // Build options dynamically
+    const fetchOptions: { userType?: string; userId?: string } = {
+      ...options, // keep any other options
+    };
+
+    // Conditionally add userType and userId only for employees
+    if (isEmployee) {
+      fetchOptions.userType = 'employee';
+      fetchOptions.userId = id; // current logged-in user ID
+    }
+
+    return fetchTickets(params, fetchOptions);
+  };
+
   return (
     <>
-      <ReusableTable<Ticket>
-        queryKey="tickets"
-        columns={columns}
-        serverSide
-        fetchData={fetchTickets}
-        idForRow={(row) => row?.documentId}
-        is3Dots={false}
-        rowActions={rowActions}
-        bulkActions={bulkActions}
-        errorMessage={t('tickets.errors.load')}
-      />
+      <DataDisplay isLoading={myPending} data={myData} refetch={refetch}>
+        <ReusableTable<Ticket>
+          queryKey="tickets"
+          columns={columns}
+          serverSide
+          fetchData={fetchTicketsForRole}
+          idForRow={(row) => row?.documentId}
+          is3Dots={false}
+          rowActions={rowActions}
+          bulkActions={bulkActions}
+          errorMessage={t('tickets.errors.load')}
+          loadingState={myPending}
+        />
+      </DataDisplay>
 
       <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
         <h2 className="text-xl font-bold mb-4">{modalData?.head}</h2>
