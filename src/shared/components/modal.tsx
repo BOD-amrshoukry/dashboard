@@ -7,39 +7,48 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  usePortal?: boolean; // 👈 allow portal rendering
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-  const { t, i18n } = useTranslation();
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  usePortal = true,
+}) => {
+  const { i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
 
-  return (
-    <>
-      {/* Overlay */}
+  if (!isOpen) return null;
 
-      {/* Modal content */}
+  const modalContent = (
+    <div
+      className="fixed inset-0 flex items-center justify-center z-[100] p-4 bg-reverse-background/50"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true">
       <div
-        className="fixed inset-0 flex items-center justify-center z-[100] p-4 bg-reverse-background/50"
-        onClick={onClose}>
-        <div
-          className="bg-second-background rounded-xl shadow-lg max-w-md w-full p-6 relative"
-          onClick={(e) => e.stopPropagation()}>
-          {/* Close button */}
-          <button
-            className={clsx(
-              'absolute top-3  text-gray-500 hover:text-gray-800',
-              isRTL ? 'left-3' : 'right-3',
-            )}
-            onClick={onClose}>
-            ✕
-          </button>
+        className="bg-second-background rounded-xl shadow-lg max-w-md w-full p-6 relative"
+        onClick={(e) => e.stopPropagation()}>
+        {/* Close button */}
+        <button
+          className={clsx(
+            'absolute top-3 text-gray-500 hover:text-gray-800',
+            isRTL ? 'left-3' : 'right-3',
+          )}
+          onClick={onClose}
+          aria-label="Close modal">
+          ✕
+        </button>
 
-          {children}
-        </div>
+        {children}
       </div>
-    </>
+    </div>
   );
+
+  return usePortal
+    ? ReactDOM.createPortal(modalContent, document.body)
+    : modalContent;
 };
 
 export default Modal;

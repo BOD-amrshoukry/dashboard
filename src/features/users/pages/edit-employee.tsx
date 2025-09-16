@@ -21,7 +21,12 @@ const EditEmployeePage = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = useCreateOrEditEmployee();
 
-  const { data, isError, isPending: isLoading, refetch } = useGetEmployee(id);
+  const {
+    data,
+    isError,
+    isPending: isLoading,
+    refetch,
+  } = useGetEmployee(Number(id));
 
   const { socket } = useSocket();
   const { mutate: sendNotification } = useSendNotification();
@@ -30,7 +35,7 @@ const EditEmployeePage = () => {
 
   const handleSubmit = (formData: any) => {
     mutate(
-      { id: id, data: formData },
+      { id: Number(id), data: formData },
       {
         onSuccess: () => {
           toast.success(t('users.success.editEmployee'));
@@ -38,7 +43,7 @@ const EditEmployeePage = () => {
           navigate(`/employees/${id}`);
           if (id) {
             sendNotification({
-              userId: id,
+              userId: Number(id),
               title: t('notifications.text.editHead'),
               message: t('notifications.text.editDescription'),
             });
@@ -59,9 +64,7 @@ const EditEmployeePage = () => {
     );
   };
 
-  const onInvalid = (error) => {
-    console.log(error);
-  };
+  const onInvalid = () => {};
 
   const defaultValues = {
     name: data?.name,
@@ -104,7 +107,7 @@ const EditEmployeePage = () => {
                 : null
             }
             name={data?.name}
-            id={id}
+            id={Number(id)}
           />
         </div>
         <div className="mt-[32px]">

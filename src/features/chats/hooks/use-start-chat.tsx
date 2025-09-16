@@ -3,7 +3,7 @@ import { startChat } from '../services/posts';
 
 const useStartChat = () => {
   return useMutation({
-    mutationFn: (data) => startChat(data),
+    mutationFn: (data: { userId: number; message: string }) => startChat(data),
   });
 };
 

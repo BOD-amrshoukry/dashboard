@@ -3,7 +3,7 @@ import { deleteEmployee } from '../services/posts';
 
 const useDeleteEmployee = () => {
   return useMutation({
-    mutationFn: (id) => deleteEmployee(id),
+    mutationFn: (id: number) => deleteEmployee(id),
   });
 };
 

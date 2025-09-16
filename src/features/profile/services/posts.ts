@@ -1,7 +1,7 @@
 import api from '../../../lib/axios';
 import { decodeJwt, getCookie } from '../../../shared/utils/auth';
 
-export const updateImage = async (id, file: File) => {
+export const updateImage = async (id: number, file: File) => {
   // Step 1: prepare formData
   const formData = new FormData();
   formData.append('files', file);
@@ -25,11 +25,11 @@ export const updateImage = async (id, file: File) => {
   return updateRes.data;
 };
 
-export const deleteImage = (id) => {
+export const deleteImage = (id: number) => {
   return api.put(`/users/${id}`, { image: null }).then((res) => res.data);
 };
 
-export const editUser = (data) => {
+export const editUser = (data: { name: string }) => {
   const myId = decodeJwt(String(getCookie('token'))).id;
 
   return api.put(`/users/${myId}`, data).then((res) => res.data);

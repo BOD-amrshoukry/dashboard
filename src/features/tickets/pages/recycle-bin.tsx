@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import PageHead from '../../../shared/components/page-head';

@@ -3,7 +3,7 @@ import { login } from '../services/posts';
 
 const useLogin = () => {
   return useMutation({
-    mutationFn: (data: { email: string; password: string }) => login(data),
+    mutationFn: (data: { identifier: string; password: string }) => login(data),
   });
 };
 

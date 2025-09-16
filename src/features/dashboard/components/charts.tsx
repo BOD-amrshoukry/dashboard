@@ -2,13 +2,10 @@ import {
   PieChart,
   Pie,
   Cell,
-  Tooltip,
   BarChart,
   Bar,
   XAxis,
   YAxis,
-  LineChart,
-  Line,
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
@@ -16,11 +13,8 @@ import {
   RadarChart,
   Legend,
   ResponsiveContainer,
-  LabelList,
 } from 'recharts';
 import useGetStats from '../hooks/use-get-stats';
-import Loading from '../../../shared/components/loading';
-import { extractUserConditions } from '../../../shared/utils/auth';
 import EmployeeStats from '../../users/components/employee-stats';
 import useUser from '../../../shared/hooks/use-user';
 import DashboardCard from '../../../shared/components/dashboard-card';
@@ -193,14 +187,6 @@ export default function Charts() {
             </h3>
             <p className="text-2xl">{data?.tickets.total}</p>
           </DashboardCard>
-
-          {/* <div className="bg-white p-4 rounded-2xl shadow">
-          <h3 className="text-lg font-semibold">Unassigned Tickets</h3>
-          <p className="text-2xl">
-            {data?.tickets.unassigned} (
-            {data?.tickets.unassignedPercentage.toFixed(1)}%)
-          </p>
-        </div> */}
 
           <DashboardCard>
             <h3 className="text-lg font-semibold mb-2">

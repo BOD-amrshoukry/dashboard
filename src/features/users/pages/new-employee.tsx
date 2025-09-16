@@ -27,9 +27,7 @@ const NewEmployeePage = () => {
     );
   };
 
-  const onInvalid = (error) => {
-    console.log(error);
-  };
+  const onInvalid = () => {};
 
   return (
     <>

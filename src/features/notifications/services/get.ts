@@ -1,6 +1,11 @@
 import api from '../../../lib/axios';
 
-export const getNotifications = async (params) => {
+export const getNotifications = async (params: {
+  pageIndex: number;
+  pageSize: number;
+  userId: number;
+  sortBy?: { id: string; desc: boolean };
+}) => {
   const query = {
     'pagination[page]': params.pageIndex + 1,
     'pagination[pageSize]': params.pageSize,
@@ -38,7 +43,7 @@ export const getNotifications = async (params) => {
   return transformed;
 };
 
-export const getNotificationsCounts = async (userId) => {
+export const getNotificationsCounts = async (userId: number) => {
   const counts = await api.get(`/notifications/counts/${userId}`);
   return counts;
 };

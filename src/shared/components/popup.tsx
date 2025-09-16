@@ -1,4 +1,10 @@
-import { useState, useRef, useLayoutEffect, useEffect, ReactNode } from 'react';
+import {
+  useState,
+  useRef,
+  useLayoutEffect,
+  useEffect,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -49,7 +55,7 @@ export default function PortalPopup({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen, onClose, anchorRef]);
 
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
 
   if (!isOpen) return null;

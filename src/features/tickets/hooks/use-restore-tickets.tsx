@@ -3,7 +3,7 @@ import { restoreTickets } from '../services/posts';
 
 const useRestoreTickets = () => {
   return useMutation({
-    mutationFn: (ids) => restoreTickets(ids),
+    mutationFn: (ids: string[]) => restoreTickets(ids),
   });
 };
 

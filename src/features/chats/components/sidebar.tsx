@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 import { decodeJwt, getCookie } from '../../../shared/utils/auth';
 import useMessagesSidebarStore from '../store/use-chat-sidebar';
 import clsx from 'clsx';
@@ -12,21 +12,17 @@ import toast from 'react-hot-toast';
 import { queryClient } from '../../../lib/tanstackquery';
 import Loading from '../../../shared/components/loading';
 import UnreadCircle from '../../../shared/components/unread-circle';
-import useMarkAsRead from '../../notifications/hooks/use-mark-as-read';
 import useMarkChatAsRead from '../hooks/use-mark-chat-as-read';
 import { useTypingStore } from '../../../shared/store/use-typing-store';
-import DataDisplay from '../../../shared/components/data-display';
 import Refetch from '../../../shared/components/refetch';
-
-type User = { id: number; username: string };
-type Message = { id: number; text: string; sender: User };
-type Chat = { id: number; user1: User; user2: User; messages: Message[] };
+import type { User } from '../../users/types/type';
+import type { Chat } from '../types/types';
 
 export default function ChatSidebar({
   setActiveChat,
   activeChat,
 }: {
-  setActiveChat: (chat: Chat) => void;
+  setActiveChat: Dispatch<SetStateAction<Chat | null>>;
   activeChat: Chat | null;
 }) {
   const [activeTab, setActiveTab] = useState<'chats' | 'users'>('chats');
@@ -41,7 +37,7 @@ export default function ChatSidebar({
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages] = useState(1);
 
   const myId = decodeJwt(String(getCookie('token'))).id;
 
@@ -55,22 +51,16 @@ export default function ChatSidebar({
     data: usersWithoutChat,
     isError: isErrorUsersWithoutChat,
     isPending: isPendingUsersWithoutChat,
-    isFetching: isFetchingUsersWithoutChat,
     refetch: refetchUsersWithoutChat,
   } = useGetUsersWithoutChat(params);
   const {
     data: userChats,
     isError: isErrorUserChats,
     isPending: isPendingUserChats,
-    isFetching: isFetchingUserChats,
     refetch: refetchUserChats,
   } = useGetUserChats(params);
 
-  const {
-    mutate: markAsRead,
-    isPending: isPendingMarking,
-    isError: isErrorMarking,
-  } = useMarkChatAsRead();
+  const { mutate: markAsRead } = useMarkChatAsRead();
 
   console.log('userChats', userChats);
 
@@ -83,11 +73,7 @@ export default function ChatSidebar({
     return () => clearTimeout(handler);
   }, [search]);
 
-  const {
-    mutate,
-    isPending: isPendingStartChat,
-    isError: isErrorStartChat,
-  } = useStartChat();
+  const { mutate, isPending: isPendingStartChat } = useStartChat();
 
   const handleStartChat = async (user: User) => {
     mutate(
@@ -96,26 +82,26 @@ export default function ChatSidebar({
         message: `Starting new chat with ${user.name}`,
       },
       {
-        onSuccess: (returnedData) => {
+        onSuccess: () => {
           toast.success(t('chats.success.start'));
           setActiveTab('chats');
 
           queryClient.invalidateQueries({ queryKey: ['chats'] });
         },
-        onError: (err) => toast.error(t('chats.errors.start')),
+        onError: () => toast.error(t('chats.errors.start')),
       },
     );
   };
 
   const { setExpanded } = useMessagesSidebarStore();
 
-  const handleSelectChat = async (chat) => {
+  const handleSelectChat = async (chat: Chat) => {
     setActiveChat(chat);
     if (window.innerWidth <= 768) {
       setExpanded(false);
     }
     markAsRead(chat.id, {
-      onSuccess: (returnedData) => {
+      onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['chats'] });
       },
     });
@@ -204,7 +190,7 @@ export default function ChatSidebar({
                     )}
 
                     {!isErrorUserChats &&
-                      chats?.map((chat) => {
+                      chats?.map((chat: Chat) => {
                         const otherUser =
                           chat?.user1?.id !== myId ? chat.user1 : chat.user2;
                         const lastMessage =
@@ -239,7 +225,7 @@ export default function ChatSidebar({
                               </p>
                             </div>
                             <UnreadCircle
-                              unreadCount={chat?.unreadCount}
+                              unreadCount={chat?.unreadCount || 0}
                               relative={true}
                             />
                           </li>
@@ -255,7 +241,7 @@ export default function ChatSidebar({
                       </div>
                     )}
                     {!isErrorUsersWithoutChat &&
-                      users?.map((user) => (
+                      users?.map((user: User) => (
                         <li
                           key={user.id}
                           className="p-2 rounded-level1 hover:bg-main-background cursor-pointer flex items-start justify-between flex-col gap-[8px]"

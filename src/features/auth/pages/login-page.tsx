@@ -9,7 +9,6 @@ import Checkbox from '../../../shared/components/checkbox';
 import { Link, useNavigate } from 'react-router-dom';
 import useLogin from '../hooks/use-login';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
 import SettingsGuest from '../../../shared/components/settings-guest';
 import { setCookie } from '../../../shared/utils/auth';
 
@@ -20,7 +19,7 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -45,7 +44,7 @@ const LoginPage = () => {
           toast.success(t('auth.success.login'));
           navigate('/dashboard');
         },
-        onError: (err) => toast.error(t('auth.errors.login')),
+        onError: () => toast.error(t('auth.errors.login')),
       },
     );
   };
@@ -54,14 +53,13 @@ const LoginPage = () => {
     console.error('❌ Validation errors:', errors);
   };
 
-  const { isPending, mutate, isError } = useLogin();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isPending, mutate } = useLogin();
 
   return (
     <div className="bg-main-background w-full min-h-screen flex">
-      <div className="flex-1 min-h-screen container pb-[32px]">
+      <div className="flex-1  container  ">
         <SettingsGuest />
-        <div className="flex justify-center items-center container sm:p-[64px] min-h-[calc(100vh-56px)]">
+        <div className="flex justify-center items-center container sm:p-[64px] pt-[32px] min-h-[calc(100vh-80px)]">
           <div className="bg-second-background w-full p-[32px] rounded-level1">
             <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
               <p className="text-[32px] font-bold text-main">

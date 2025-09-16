@@ -3,7 +3,8 @@ import { pay } from '../services/posts';
 
 const usePay = () => {
   return useMutation({
-    mutationFn: (data) => pay(data),
+    mutationFn: (data: { nonce: any; amount: number; planId: number }) =>
+      pay(data),
   });
 };
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import useUser from '../../../shared/hooks/use-user';
 import UserImage from '../../../shared/components/user-image';

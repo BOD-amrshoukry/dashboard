@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import Button from '../../../shared/components/button';
 import { useTranslation } from 'react-i18next';
+import type { Plan } from '../types/types';
+interface PlanInterface {
+  data: Plan | null; // if it can be null initially
+  setPlan: React.Dispatch<React.SetStateAction<Plan | null>>;
+}
 
-const Plan = ({ data, setPlan }) => {
+const PlanPlan: FC<PlanInterface> = ({ data, setPlan }) => {
   const { t } = useTranslation();
   return (
     <div className="bg-second-background rounded-level1 shadow-lg p-6 hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
@@ -33,5 +38,5 @@ const Plan = ({ data, setPlan }) => {
   );
 };
 
-export default Plan;
+export default PlanPlan;
 

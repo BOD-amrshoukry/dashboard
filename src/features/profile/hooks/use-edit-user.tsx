@@ -3,7 +3,7 @@ import { editUser } from '../services/posts';
 
 const useEditUser = () => {
   return useMutation({
-    mutationFn: (data) => editUser(data),
+    mutationFn: (data: { name: string }) => editUser(data),
   });
 };
 

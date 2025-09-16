@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import EmployeeTicketsTable from './employee-tickets-table';
 import PageHead from '../../../shared/components/page-head';
 import { useTranslation } from 'react-i18next';
 import PageAction from '../../../shared/components/page-action';
 import EmployeeTicketForm from './employee-ticket-form';
 
-const EmployeeTickets = ({ data }) => {
+const EmployeeTickets = ({ data }: { data: { name: string } }) => {
   const { t } = useTranslation();
   const [isEnabled, setIsEnabled] = useState(false);
   return (
@@ -20,7 +20,7 @@ const EmployeeTickets = ({ data }) => {
 
         <div className="flex items-center gap-[16px]">
           <PageAction
-            href={false}
+            href={undefined}
             onClick={() => setIsEnabled(true)}
             disabled={isEnabled}>
             +

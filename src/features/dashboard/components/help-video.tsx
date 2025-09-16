@@ -1,19 +1,16 @@
 import { Play } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 const HelpVideo = () => {
-  const videoRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Play video and set state to playing
   const handlePlay = () => {
-    videoRef.current.play();
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
     setIsPlaying(true);
-  };
-
-  // Pause event to update state when the video is paused
-  const handlePause = () => {
-    setIsPlaying(false);
   };
 
   return (

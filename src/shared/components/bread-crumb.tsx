@@ -11,6 +11,8 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
+type DisplayedItem = BreadcrumbItem | '...';
+
 // Simple hook to detect media queries
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(() =>
@@ -60,7 +62,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   const hiddenItems =
     items.length > sliceCount ? items.slice(0, items.length - sliceCount) : [];
 
-  const displayedItems =
+  const displayedItems: DisplayedItem[] =
     items.length > sliceCount ? ['...', ...items.slice(-sliceCount)] : items;
 
   return (
@@ -77,7 +79,6 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
                   className="text-main-text hover:text-main-text-hover cursor-pointer ">
                   ...
                 </button>
-
                 <span className="text-main">/</span>
               </div>
 

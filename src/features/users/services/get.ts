@@ -1,5 +1,5 @@
 import api from '../../../lib/axios';
-import type { FetchParams, FetchResult } from '../../tables/types/table';
+import type { FetchParams, FetchResult } from '../../../shared/types/table';
 import type { User } from '../types/type';
 
 export async function getEmployees(
@@ -126,19 +126,19 @@ export async function getManagers(
   };
 }
 
-export const getEmployee = async (id: string) => {
+export const getEmployee = async (id: number) => {
   return api
     .get(`/users/${id}?populate=image&filters[type][$eq]=employee`)
     .then((res) => res.data);
 };
 
-export const getManager = async (id: string) => {
+export const getManager = async (id: number) => {
   return api
     .get(`/users/${id}?populate=image&filters[type][$eq]=manager`)
     .then((res) => res.data);
 };
 
-export const getEmployeeStats = async (id: string) => {
+export const getEmployeeStats = async (id: number) => {
   return api.get(`/dashboard/employee-stats/${id}`).then((res) => res.data);
 };
 

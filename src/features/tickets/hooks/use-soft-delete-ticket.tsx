@@ -3,7 +3,7 @@ import { softDeleteTicket } from '../services/posts';
 
 const useSoftDeleteTicket = () => {
   return useMutation({
-    mutationFn: (id) => softDeleteTicket(id),
+    mutationFn: (id: string) => softDeleteTicket(id),
   });
 };
 

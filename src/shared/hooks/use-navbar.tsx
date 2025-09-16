@@ -9,12 +9,10 @@ import {
   Trash2,
   Users,
 } from 'lucide-react';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import NotificationsIcon from '../components/notification-icon';
 import useGetNotificationsCount from '../../features/notifications/hooks/use-get-notifications-count';
 import useGetUnreadAllCountChats from '../../features/chats/hooks/use-get-unread-all-count';
-import { decodeJwt, getCookie } from '../utils/auth';
 import ChatsIcon from '../components/chat-icon';
 import useUser from './use-user';
 
@@ -26,17 +24,9 @@ const useNavbar = () => {
   const isOwnerManager = myData?.type === 'owner' || myData?.type === 'manager';
   const isOwner = myData?.type === 'owner';
 
-  const {
-    data: notificationsData,
-    isError,
-    isPending,
-  } = useGetNotificationsCount(id);
+  const { data: notificationsData } = useGetNotificationsCount(id);
 
-  const {
-    data: chatsCount,
-    isError: isErrorChatsCount,
-    isPending: isPendingChatsCount,
-  } = useGetUnreadAllCountChats();
+  const { data: chatsCount } = useGetUnreadAllCountChats();
 
   const data = isOwner
     ? [

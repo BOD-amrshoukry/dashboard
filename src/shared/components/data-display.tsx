@@ -8,8 +8,9 @@ type ErrorType = string | null | undefined;
 export interface DataDisplayInterface<T> {
   isLoading: IsLoadingType;
   error: ErrorType;
+  data: T | null | undefined;
   children: ChildrenType;
-  data: T;
+  refetch?: () => void;
 }
 
 const DataDisplay = <T,>({
@@ -31,7 +32,7 @@ const DataDisplay = <T,>({
     return (
       <div className="flex items-center gap-[16px]">
         <p>{error}</p>
-        <Refetch refetch={refetch} />
+        {refetch && <Refetch refetch={refetch} />}
       </div>
     );
   }

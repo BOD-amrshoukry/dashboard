@@ -3,7 +3,8 @@ import { sendMessage } from '../services/posts';
 
 const useSendMessage = () => {
   return useMutation({
-    mutationFn: (data) => sendMessage(data.id, data.data),
+    mutationFn: (data: { id: number; data: { text: string } }) =>
+      sendMessage(data.id, data.data),
   });
 };
 

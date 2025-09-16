@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -14,29 +14,34 @@ import Modal from '../../../shared/components/modal';
 import Button from '../../../shared/components/button';
 import useSendNotification from '../../notifications/hooks/use-send-notification';
 import { useSocket } from '../../../hooks/use-socket';
+import type { ModalDataType } from '../../../shared/types/modal';
 
 const ViewTicketPage = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isError, isPending: isLoading, refetch } = useGetTicket(id);
+  const {
+    data,
+    isError,
+    isPending: isLoading,
+    refetch,
+  } = useGetTicket(String(id));
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalDataType>();
 
   const {
     mutate: softDeleteTicketMutate,
     isPending: isPendingSoftDeleteTicket,
-    isError: isErrorSoftDeleteTicket,
   } = useSoftDeleteTicket();
 
   const { mutate: sendNotification } = useSendNotification();
   const { socket } = useSocket();
 
   const handleSubmit = () => {
-    softDeleteTicketMutate(id, {
-      onSuccess: (returnedData) => {
+    softDeleteTicketMutate(String(id), {
+      onSuccess: () => {
         toast.success(t('tickets.success.softDeletedOne'));
         queryClient.invalidateQueries({ queryKey: ['tickets'] });
         setIsOpenModal(false);
@@ -62,7 +67,7 @@ const ViewTicketPage = () => {
           }
         }
       },
-      onError: (err) => toast.error(t('tickets.errors.hardDeletedOne')),
+      onError: () => toast.error(t('tickets.errors.hardDeletedOne')),
     });
   };
 
@@ -91,7 +96,7 @@ const ViewTicketPage = () => {
               <Pencil />
             </PageAction>
             <PageAction
-              href={false}
+              href={undefined}
               onClick={() => {
                 setModalData({
                   head: t('tickets.text.deleteHead'),

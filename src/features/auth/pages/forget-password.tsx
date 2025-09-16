@@ -3,7 +3,7 @@ import Input from '../../../shared/components/input';
 import Button from '../../../shared/components/button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import SettingsGuest from '../../../shared/components/settings-guest';
@@ -21,12 +21,10 @@ const ForgetPasswordPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ForgetPasswordFormData>({
     resolver: zodResolver(forgetPasswordSchema),
   });
-
-  const navigate = useNavigate();
 
   const onSubmit = (data: ForgetPasswordFormData) => {
     console.log('login data', data);
@@ -34,11 +32,11 @@ const ForgetPasswordPage = () => {
     mutate(
       { email: data.email },
       {
-        onSuccess: (returnedData) => {
+        onSuccess: () => {
           toast.success(t('auth.success.forgetPassword'));
           setStep(2);
         },
-        onError: (err) => toast.error(t('auth.errors.forgetPassword')),
+        onError: () => toast.error(t('auth.errors.forgetPassword')),
       },
     );
   };
@@ -47,15 +45,15 @@ const ForgetPasswordPage = () => {
     console.error('❌ Validation errors:', errors);
   };
 
-  const { isPending, mutate, isError } = useForgetPassword();
+  const { isPending, mutate } = useForgetPassword();
 
   const [step, setStep] = useState(1);
 
   return (
     <div className="bg-main-background w-full min-h-screen flex">
-      <div className="flex-1 min-h-screen container">
+      <div className="flex-1 container">
         <SettingsGuest />
-        <div className="flex justify-center items-center container sm:p-[64px] pb-[32px] min-h-[calc(100vh-56px)]">
+        <div className="flex justify-center items-center container sm:p-[64px] pt-[32px]  min-h-[calc(100vh-80px)]">
           <div className="bg-second-background w-full p-[32px] rounded-level1">
             {step === 1 && (
               <form onSubmit={handleSubmit(onSubmit, onInvalid)}>

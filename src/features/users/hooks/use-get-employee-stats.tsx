@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getEmployeeStats } from '../services/get';
 
-const useGetEmployeeStats = (id: string) => {
+const useGetEmployeeStats = (id: number) => {
   const query = useQuery({
     queryKey: ['employeeStats'],
     staleTime: 0,

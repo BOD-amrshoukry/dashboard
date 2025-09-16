@@ -3,7 +3,7 @@ import { unassignTickets } from '../services/posts';
 
 const useUnassignTickets = () => {
   return useMutation({
-    mutationFn: (ids) => unassignTickets(ids),
+    mutationFn: (ids: string[]) => unassignTickets(ids),
   });
 };
 

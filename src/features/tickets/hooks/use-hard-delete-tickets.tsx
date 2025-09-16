@@ -3,7 +3,7 @@ import { hardDeleteTickets } from '../services/posts';
 
 const useHardDeleteTickets = () => {
   return useMutation({
-    mutationFn: (ids) => hardDeleteTickets(ids),
+    mutationFn: (ids: string[]) => hardDeleteTickets(ids),
   });
 };
 

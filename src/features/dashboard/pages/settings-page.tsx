@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import SettingsData from '../../../shared/components/settings-data';
 import SettingsModal from '../../../shared/components/settings-modal';
-import Loading from '../../../shared/components/loading';
 import { useTranslation } from 'react-i18next';
+
+type ModalData = {
+  type: 'language' | 'theme';
+  value: string;
+  head: string;
+  description: string;
+};
 
 const SettingsPage = () => {
   const { t } = useTranslation();
   const data = [{ label: t('navbar.text.settings'), href: '/settings' }];
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalData>({
+    type: 'language', // or "theme"
+    value: '', // or the selected theme
+    head: '',
+    description: '',
+  });
 
   return (
     <>

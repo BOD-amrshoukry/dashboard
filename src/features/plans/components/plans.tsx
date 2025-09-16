@@ -1,10 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import useGetPlans from '../hooks/use-get-plans';
-import Plan from './plan';
 import DataDisplay from '../../../shared/components/data-display';
 import Button from '../../../shared/components/button';
+import type { Plan } from '../types/types';
+import PlanPlan from './plan';
+import type { FC } from 'react';
 
-const Plans = ({ setPlan }) => {
+interface PlanInterface {
+  setPlan: React.Dispatch<React.SetStateAction<Plan | null>>;
+}
+
+const Plans: FC<PlanInterface> = ({ setPlan }) => {
   const { t, i18n } = useTranslation();
   const { data, isError, isPending, refetch } = useGetPlans(i18n.language);
 
@@ -15,8 +21,8 @@ const Plans = ({ setPlan }) => {
       data={data}
       error={isError ? t('plans.errors.load') : undefined}>
       <div className="grid lg:grid-cols-2 grid-cols-1 xl:grid-cols-3 gap-[24px] mb-[64px]">
-        {data?.data.map((plan) => {
-          return <Plan setPlan={setPlan} data={plan} key={plan.id} />;
+        {data?.data.map((plan: Plan) => {
+          return <PlanPlan setPlan={setPlan} data={plan} key={plan.id} />;
         })}
       </div>
       <div className="flex items-center gap-[16px] flex-wrap">

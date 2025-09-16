@@ -1,6 +1,9 @@
 import api from '../../../lib/axios';
 
-export const getUsersWithoutChat = async (params) => {
+export const getUsersWithoutChat = async (params: {
+  search: string;
+  page: number;
+}) => {
   return api
     .get(`/chats/users-without-chat`, {
       params: { search: params.search, page: params.page, limit: 10 },
@@ -8,7 +11,10 @@ export const getUsersWithoutChat = async (params) => {
     .then((res) => res.data);
 };
 
-export const getUserChats = async (params) => {
+export const getUserChats = async (params: {
+  page: number;
+  search: string;
+}) => {
   return api
     .get(`/chats/user-chats`, {
       params: { search: params.search, page: params.page, limit: 10 },
@@ -16,7 +22,10 @@ export const getUserChats = async (params) => {
     .then((res) => res.data);
 };
 
-export const getUserChat = async (id, params) => {
+export const getUserChat = async (
+  id: number,
+  params: { page: number; pageSize: number },
+) => {
   return api
     .get(`/chats/${id}`, {
       params: { page: params.page, limit: 10 },

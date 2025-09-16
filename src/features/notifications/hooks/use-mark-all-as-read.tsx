@@ -3,7 +3,7 @@ import { markAllAsRead } from '../services/posts';
 
 const useMarkAllAsRead = () => {
   return useMutation({
-    mutationFn: (id) => markAllAsRead(id),
+    mutationFn: (id: number) => markAllAsRead(id),
   });
 };
 

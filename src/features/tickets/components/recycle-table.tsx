@@ -2,10 +2,9 @@
 
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import type { Column } from '../../tables/types/table';
 import type { Ticket } from '../types/type';
 import { useState } from 'react';
-import { Eye, Pencil, RotateCw, Trash2 } from 'lucide-react';
+import { Eye, RotateCw, Trash2 } from 'lucide-react';
 import useHardDeleteTicket from '../hooks/use-hard-delete-ticket';
 import useHardDeleteTickets from '../hooks/use-hard-delete-tickets';
 import toast from 'react-hot-toast';
@@ -13,11 +12,22 @@ import { queryClient } from '../../../lib/tanstackquery';
 import { ReusableTable } from '../../../shared/components/table';
 import Modal from '../../../shared/components/modal';
 import Button from '../../../shared/components/button';
-import { fetchRecycledTickets, fetchTickets } from '../services/get';
+import { fetchRecycledTickets } from '../services/get';
 import useRestoreTicket from '../hooks/use-restore-ticket';
 import useRestoreTickets from '../hooks/use-restore-tickets';
 import useSendNotification from '../../notifications/hooks/use-send-notification';
 import { useSocket } from '../../../hooks/use-socket';
+import type { Column } from '../../../shared/types/table';
+
+interface ModalData {
+  head: string;
+  description: string;
+  type: 'single' | 'multiple';
+  action: string;
+  value: any; // or more specific type
+  ids?: string | string[]; // depending on single/multiple
+  id?: string | string[];
+}
 
 export default function RecycleTable() {
   const navigate = useNavigate();
@@ -63,7 +73,7 @@ export default function RecycleTable() {
   ];
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalData>({});
 
   const rowActions = [
     {

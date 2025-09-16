@@ -3,7 +3,8 @@ import { updateUserImage } from '../services/posts';
 
 const useUpdateImage = () => {
   return useMutation({
-    mutationFn: (params) => updateUserImage(params.id, params.file),
+    mutationFn: (params: { id: number; file: File }) =>
+      updateUserImage(params.id, params.file),
   });
 };
 

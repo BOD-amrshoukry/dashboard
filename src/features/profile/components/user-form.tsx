@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useEditUserSchema, {
   type EditUserFormData,
@@ -11,14 +10,18 @@ import Input from '../../../shared/components/input';
 import Button from '../../../shared/components/button';
 import { queryClient } from '../../../lib/tanstackquery';
 
-const UserForm = ({ data }) => {
+const UserForm = ({
+  data,
+}: {
+  data: { name: string; email: string; username: string };
+}) => {
   const { t } = useTranslation();
   const { editUserSchema } = useEditUserSchema();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isDirty },
   } = useForm<EditUserFormData>({
     resolver: zodResolver(editUserSchema),
     defaultValues: {
@@ -27,16 +30,14 @@ const UserForm = ({ data }) => {
   });
 
   const onSubmit = (data: EditUserFormData) => {
-    console.log('login data', data);
-
     mutate(
       { name: data.name },
       {
-        onSuccess: (returnedData) => {
+        onSuccess: () => {
           toast.success(t('profile.success.update'));
           queryClient.invalidateQueries({ queryKey: ['me'] });
         },
-        onError: (err) => toast.error(t('profile.errors.update')),
+        onError: () => toast.error(t('profile.errors.update')),
       },
     );
   };
@@ -45,7 +46,7 @@ const UserForm = ({ data }) => {
     console.error('❌ Validation errors:', errors);
   };
 
-  const { isPending, mutate, isError } = useEditUser();
+  const { isPending, mutate } = useEditUser();
 
   return (
     <div>

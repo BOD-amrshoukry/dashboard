@@ -13,17 +13,9 @@
  */
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PortalPopup from './popup';
-import {
-  ChevronDown,
-  ChevronUp,
-  Columns4,
-  Eye,
-  Pencil,
-  Trash,
-  Trash2,
-} from 'lucide-react';
+import { ChevronDown, ChevronUp, Columns4 } from 'lucide-react';
 import Button from './button';
 import Checkbox from './checkbox';
 import Select from './select';
@@ -33,37 +25,9 @@ import clsx from 'clsx';
 import DataDisplay from './data-display';
 import RowActionsMenuPortal from './portal-3dots';
 import Loading from './loading';
+import type { Column, FetchParams, FetchResult } from '../types/table';
 
 // ---------------- Types ----------------
-
-type SortDirection = 'asc' | 'desc' | null;
-
-export type FilterType =
-  | { kind: 'text' }
-  | { kind: 'number' }
-  | { kind: 'select'; options: { label: string; value: string | number }[] };
-
-export type Column<T> = {
-  id: string;
-  header: string;
-  accessor: (row: T) => React.ReactNode;
-  accessorRaw?: (row: T) => any;
-  sortable?: boolean;
-  filter?: FilterType;
-  visible?: boolean;
-  hiddenOnMobile?: boolean;
-  width?: string;
-  fixedVisible?: boolean; // ← new
-};
-
-export type FetchParams = {
-  pageIndex: number;
-  pageSize: number;
-  sortBy?: { id: string; desc: boolean } | null;
-  filters?: { id: string; value: any }[];
-};
-
-export type FetchResult<T> = { data: T[]; total: number };
 
 type Props<T> = {
   queryKey: string | string[];

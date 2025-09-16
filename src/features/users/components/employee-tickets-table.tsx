@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { Column } from '../../tables/types/table';
 import type { Ticket } from '../../tickets/types/type';
 import useTicketStates from '../../tickets/hooks/use-ticket-states';
 import { useState } from 'react';
@@ -17,6 +16,7 @@ import Button from '../../../shared/components/button';
 import { fetchTickets } from '../../tickets/services/get';
 import { useSocket } from '../../../hooks/use-socket';
 import useSendNotification from '../../notifications/hooks/use-send-notification';
+import type { Column } from '../../../shared/types/table';
 
 export default function EmployeeTicketsTable() {
   const navigate = useNavigate();

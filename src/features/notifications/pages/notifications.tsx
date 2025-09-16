@@ -1,11 +1,9 @@
-import React from 'react';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import { useTranslation } from 'react-i18next';
 import PageHead from '../../../shared/components/page-head';
 import NotificationsList from '../components/notifications-list';
 import useMarkAllAsRead from '../hooks/use-mark-all-as-read';
 import PageAction from '../../../shared/components/page-action';
-import { BookmarkCheck } from 'lucide-react';
 import { decodeJwt, getCookie } from '../../../shared/utils/auth';
 import toast from 'react-hot-toast';
 import { queryClient } from '../../../lib/tanstackquery';
@@ -20,19 +18,15 @@ const NotificationsPage = () => {
 
   const id = decodeJwt(String(getCookie('token'))).id;
 
-  const {
-    mutate,
-    isPending: isPendingMarking,
-    isError: isErrorMarking,
-  } = useMarkAllAsRead();
+  const { mutate, isPending: isPendingMarking } = useMarkAllAsRead();
 
   const handleMarkAll = () => {
     mutate(id, {
-      onSuccess: (returnedData) => {
+      onSuccess: () => {
         toast.success(t('notifications.success.markAll'));
         queryClient.invalidateQueries({ queryKey: ['notifications'] });
       },
-      onError: (err) => toast.error(t('notifications.errors.markAll')),
+      onError: () => toast.error(t('notifications.errors.markAll')),
     });
   };
 
@@ -46,11 +40,12 @@ const NotificationsPage = () => {
       <div className="flex gap-[24px] items-center mb-[32px] flex-wrap">
         <PageHead head={t('navbar.text.notifications')} />
         <DataDisplay
+          data={data}
           refetch={refetch}
           isLoading={isPending}
           error={isError ? t('notifications.errors.loadCount') : undefined}>
           <PageAction
-            href={false}
+            href={undefined}
             onClick={handleMarkAll}
             disabled={data?.data?.unreadCount === 0}>
             {isPendingMarking

@@ -2,7 +2,6 @@
 
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import type { Column } from '../../tables/types/table';
 import { BASE_URL } from '../../../shared/constants/api';
 import { useState } from 'react';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
@@ -15,13 +14,15 @@ import { getManagers } from '../services/get';
 import Modal from '../../../shared/components/modal';
 import Button from '../../../shared/components/button';
 import type { User } from '../types/type';
+import type { Column } from '../../../shared/types/table';
+import type { ModalDataType } from '../../../shared/types/modal';
 
 export default function ManagersTable() {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
 
-  const columns: Column<Manager>[] = [
+  const columns: Column<User>[] = [
     {
       id: 'image',
       header: t('users.text.image'),
@@ -78,7 +79,7 @@ export default function ManagersTable() {
   ];
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalDataType>();
 
   const rowActions = [
     {

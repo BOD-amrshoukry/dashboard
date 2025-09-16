@@ -13,9 +13,10 @@ interface ManagerFormProps {
   onInvalid?: (errors: FieldErrors) => void;
   isPending?: boolean;
   submitLabel?: string;
+  type: 'edit' | 'new';
 }
 
-const EmployeeForm: React.FC<EmployeeFormData> = ({
+const EmployeeForm: React.FC<ManagerFormProps> = ({
   defaultValues,
   onSubmit,
   onInvalid,
@@ -28,7 +29,6 @@ const EmployeeForm: React.FC<EmployeeFormData> = ({
   const {
     register,
     handleSubmit,
-    control,
     watch,
     formState: { errors, isDirty },
   } = useForm<EmployeeFormData>({

@@ -2,7 +2,6 @@ import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import { useTranslation } from 'react-i18next';
 import PageHead from '../../../shared/components/page-head';
 import PageAction from '../../../shared/components/page-action';
-import { useNavigate } from 'react-router-dom';
 import TicketsTable from '../components/tickets-table';
 import useUser from '../../../shared/hooks/use-user';
 import Loading from '../../../shared/components/loading';

@@ -11,13 +11,14 @@ import Refetch from './refetch';
 
 interface PaginatedDatalistProps {
   queryKey: string;
-  fetchFunction: (
-    query: string,
-    page: number,
-    pageSize: number,
-  ) => Promise<any>;
-  itemKey: string; // field to display (label)
-  idKey?: string; // unique identifier (default: "id")
+  fetchFunction: (params: {
+    pageIndex: number;
+    pageSize: number;
+    sortBy?: any;
+    filters?: { id: string; value: string }[];
+  }) => Promise<any>;
+  itemKey: string;
+  idKey?: string;
   label?: string;
   name: string;
   errors?: FieldErrors;
@@ -26,6 +27,7 @@ interface PaginatedDatalistProps {
   value?: { [key: string]: any } | { [key: string]: any }[] | null;
   onChange?: (value: any) => void;
   multiple?: boolean;
+  disabled?: boolean; // ✅ Add this to interface
 }
 
 export default function PaginatedDatalist({

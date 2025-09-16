@@ -3,7 +3,7 @@ import { deleteManager } from '../services/posts';
 
 const useDeleteManager = () => {
   return useMutation({
-    mutationFn: (id) => deleteManager(id),
+    mutationFn: (id: number) => deleteManager(id),
   });
 };
 

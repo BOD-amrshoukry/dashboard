@@ -19,11 +19,16 @@ const EditManagerPage = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = useCreateOrEditManager();
 
-  const { data, isError, isPending: isLoading, refetch } = useGetManager(id);
+  const {
+    data,
+    isError,
+    isPending: isLoading,
+    refetch,
+  } = useGetManager(Number(id));
 
   const handleSubmit = (formData: any) => {
     mutate(
-      { id: id, data: formData },
+      { id: Number(id), data: formData },
       {
         onSuccess: () => {
           toast.success(t('users.success.edit'));
@@ -35,9 +40,7 @@ const EditManagerPage = () => {
     );
   };
 
-  const onInvalid = (error) => {
-    console.log(error);
-  };
+  const onInvalid = () => {};
 
   const defaultValues = {
     name: data?.name,
@@ -80,7 +83,7 @@ const EditManagerPage = () => {
                 : null
             }
             name={data?.name}
-            id={id}
+            id={Number(id)}
           />
         </div>
         <div className="mt-[32px]">

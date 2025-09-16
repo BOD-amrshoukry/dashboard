@@ -11,21 +11,27 @@ import { queryClient } from '../../../lib/tanstackquery';
 import Button from '../../../shared/components/button';
 import PaginatedDatalist from '../../../shared/components/paginated-datalist';
 import { fetchTickets } from '../../tickets/services/get';
-import { useEffect } from 'react';
 import useSendNotification from '../../notifications/hooks/use-send-notification';
 import { useSocket } from '../../../hooks/use-socket';
+import type { FC } from 'react';
 
-const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
+interface EmployeeTicketFormProps {
+  isEnabled: boolean;
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const EmployeeTicketForm: FC<EmployeeTicketFormProps> = ({
+  isEnabled,
+  setIsEnabled,
+}) => {
   const { t } = useTranslation();
   const { employeeTicketSchema } = useEmployeeTicketSchema();
   const { id } = useParams();
 
   const {
-    register,
     handleSubmit,
     control,
-    watch,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isDirty },
   } = useForm<EmployeeTicketFormData>({
     resolver: zodResolver(employeeTicketSchema),
     defaultValues: {
@@ -38,16 +44,16 @@ const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
 
   const onSubmit = (data: EmployeeTicketFormData) => {
     mutate(
-      { ids: data.tickets, userId: id },
+      { ids: data.tickets, userId: Number(id) },
       {
-        onSuccess: (returnedData) => {
+        onSuccess: () => {
           toast.success(t('tickets.success.assign'));
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           queryClient.invalidateQueries({ queryKey: ['employees'] });
           setIsEnabled(false);
           if (id) {
             sendNotification({
-              userId: id,
+              userId: Number(id),
               title: t('notifications.text.assignManyHead'),
               message: t('notifications.text.assignManyDescription'),
             });
@@ -62,7 +68,7 @@ const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
             }
           }
         },
-        onError: (err) => toast.error(t('tickets.errors.assign')),
+        onError: () => toast.error(t('tickets.errors.assign')),
       },
     );
   };
@@ -71,7 +77,7 @@ const EmployeeTicketForm = ({ isEnabled, setIsEnabled }) => {
     console.error('❌ Validation errors:', errors);
   };
 
-  const { isPending, mutate, isError } = useAssignTickets();
+  const { isPending, mutate } = useAssignTickets();
 
   if (!isEnabled) return null;
 

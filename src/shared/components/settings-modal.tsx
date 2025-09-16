@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
 import Modal from './modal';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Button from './button';
 
-const SettingsModal = ({ modalData, setIsOpenModal, isOpenModal }) => {
+type ModalData = {
+  type: 'language' | 'theme';
+  value: string;
+  head: string;
+  description: string;
+};
+
+const SettingsModal = ({
+  modalData,
+  setIsOpenModal,
+  isOpenModal,
+}: {
+  modalData: ModalData;
+  setIsOpenModal: (open: boolean) => void;
+  isOpenModal: boolean;
+}) => {
   const { t, i18n } = useTranslation();
-  const handleChangeLanguage = (lang) => {
+  const handleChangeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
     toast.success(t('settings.success.languageChange'));
     setIsOpenModal(false);
   };
 
-  const handleChangeTheme = (theme) => {
+  const handleChangeTheme = (theme: string) => {
     localStorage.setItem('theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
     toast.success(t('settings.success.themeChange'));
@@ -35,7 +49,7 @@ const SettingsModal = ({ modalData, setIsOpenModal, isOpenModal }) => {
           onClick={() =>
             modalData?.type === 'language'
               ? handleChangeLanguage(modalData?.value)
-              : handleChangeTheme(modalData?.value)
+              : handleChangeTheme(String(modalData?.value))
           }>
           {t('general.text.change')}
         </Button>

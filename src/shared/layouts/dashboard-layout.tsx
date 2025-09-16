@@ -1,39 +1,19 @@
-import {
-  BellRing,
-  CircleUserRound,
-  LayoutDashboard,
-  Settings,
-  ShieldUser,
-  Ticket,
-  Users,
-  Menu,
-  X,
-  Trash2,
-  StretchHorizontal,
-  CircleQuestionMark,
-  MessageCircleMore, // add the X icon from lucide-react
-} from 'lucide-react';
 import useSidebarStore from '../store/use-sidebar-store';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useState } from 'react';
 import UserDetailsSidebar from '../components/user-details-sidebar';
-import useGetNotificationsCount from '../../features/notifications/hooks/use-get-notifications-count';
 import { decodeJwt, getCookie } from '../utils/auth';
-import NotificationsIcon from '../components/notification-icon';
 import PushNotification from '../../components/push-notification';
-import useGetUnreadAllCountChats from '../../features/chats/hooks/use-get-unread-all-count';
-import ChatsIcon from '../components/chat-icon';
 import useGetAllUserChats from '../../features/chats/hooks/use-get-all-user-chats';
 import { useSocket } from '../../hooks/use-socket';
 import { queryClient } from '../../lib/tanstackquery';
 import { useTypingStore } from '../store/use-typing-store';
 import toast from 'react-hot-toast';
 import useNavbar from '../hooks/use-navbar';
-import Loading from '../components/loading';
 import RouteWatcher from '../components/route-watcher';
+import { X } from 'lucide-react';
 
 const DashboardLayout = () => {
   const { isExpanded, toggleSidebar } = useSidebarStore();
@@ -42,15 +22,9 @@ const DashboardLayout = () => {
   const isRTL = i18n.dir() === 'rtl';
   const token = decodeJwt(String(getCookie('token')));
   const id = token.id;
-  const isOwnerManager = token.type === 'owner' || token.type === 'manager';
-  const isOwner = token.type === 'owner';
 
   const { socket } = useSocket();
-  const {
-    isPending: isPendingAllChats,
-    data: chats,
-    isError: isErrorAllChats,
-  } = useGetAllUserChats();
+  const { data: chats } = useGetAllUserChats();
 
   // const { typingUsers, setTypingUsers } = useTypingStore();
   const typingUsers = useTypingStore((state) => state.typingUsers);
@@ -108,7 +82,7 @@ const DashboardLayout = () => {
     socket.emit('joinNotificationRoom');
 
     // Join all chat rooms
-    allChats.forEach((chat) => {
+    allChats.forEach((chat: { id: string }) => {
       socket.emit('joinChat', chat.id);
     });
 
@@ -145,7 +119,7 @@ const DashboardLayout = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const { data, isPendingMe } = useNavbar();
+  const { data } = useNavbar();
 
   return (
     <>

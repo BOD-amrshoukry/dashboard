@@ -1,9 +1,10 @@
 import { create } from 'zustand';
+import type { User } from '../../features/users/types/type';
 
 interface TypingStore {
-  typingUsers: TypingUser[];
-  addTypingUser: (user: TypingUser) => void;
-  removeTypingUser: (userId: number) => void;
+  typingUsers: User[];
+  addTypingUser: (user: User) => void;
+  removeTypingUser: (user: User) => void;
   clearTypingUsers: () => void;
 }
 
@@ -15,7 +16,7 @@ export const useTypingStore = create<TypingStore>((set) => ({
         ? state.typingUsers
         : [...state.typingUsers, user],
     })),
-  removeTypingUser: (user: TypingUser) =>
+  removeTypingUser: (user: User) =>
     set((state) => ({
       typingUsers: state.typingUsers.filter(
         (u) => !(u.id === user.id && u.chatId === user.chatId),

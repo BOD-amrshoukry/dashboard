@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import api from '../../../lib/axios';
 import { decodeJwt, getCookie } from '../../../shared/utils/auth';
 import { BASE_URL } from '../../../shared/constants/api';
 import Button from '../../../shared/components/button';
@@ -9,7 +8,6 @@ import { ChevronLeft, Send } from 'lucide-react';
 import useSendMessage from '../hooks/use-send-message';
 import { queryClient } from '../../../lib/tanstackquery';
 import toast from 'react-hot-toast';
-import useGetUserChat from '../hooks/use-get-chat';
 import clsx from 'clsx';
 import { formatDate } from '../../../shared/utils/time';
 import useInfiniteChat from '../hooks/use-get-chat';
@@ -19,19 +17,17 @@ import { useSocket } from '../../../hooks/use-socket';
 import { useTypingStore } from '../../../shared/store/use-typing-store';
 import useMarkChatAsRead from '../hooks/use-mark-chat-as-read';
 import useMessagesSidebarStore from '../store/use-chat-sidebar';
+import type { Chat } from '../types/types';
+import type { InfiniteData } from '@tanstack/react-query';
 
-export default function ChatView({ chat }) {
+export default function ChatView({ chat }: { chat: Chat | null }) {
   console.log('CHAT', chat);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const { socket } = useSocket();
   const typingUsers = useTypingStore((state) => state.typingUsers);
 
-  const {
-    mutate: markAsRead,
-    isPending: isPendingMarkAsRead,
-    isError: isErrorMarkAsRead,
-  } = useMarkChatAsRead();
+  const { mutate: markAsRead } = useMarkChatAsRead();
 
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
@@ -87,7 +83,7 @@ export default function ChatView({ chat }) {
   } = useInfiniteChat(chat?.id, 20);
 
   // Flatten all pages of messages
-  const messages = data?.pages.flatMap((page) => page.data.messages) || [];
+  const messages = data?.pages.flatMap((page: any) => page.data.messages) || [];
 
   // Scroll handler to load more when user reaches top
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -101,9 +97,11 @@ export default function ChatView({ chat }) {
     }
   };
 
-  const typingTimeoutRef = useRef(null);
+  const typingTimeoutRef = useRef<number | null>(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setNewMessage(e.target.value);
 
     if (!isTyping) {
@@ -125,7 +123,8 @@ export default function ChatView({ chat }) {
     }, 1000); // 1s of inactivity
   };
 
-  const activeChat = data?.pages[0].data;
+  const activeChat = (data as InfiniteData<{ data: Chat }>)?.pages[0]
+    .data as Chat;
 
   const otherUser =
     activeChat?.user1?.id === myId ? activeChat?.user2 : activeChat?.user1;
@@ -171,65 +170,67 @@ export default function ChatView({ chat }) {
     setNewMessage('');
 
     // 2️⃣ Send to backend
-    mutate(
-      { id: chat?.id, data: { text: messageToSend } },
-      {
-        onSuccess: (returnedData) => {
-          queryClient.setQueryData(['chats', chat?.id], (oldData: any) => {
-            if (!oldData) return oldData;
+    if (chat) {
+      mutate(
+        { id: chat?.id, data: { text: messageToSend } },
+        {
+          onSuccess: (returnedData) => {
+            queryClient.setQueryData(['chats', chat?.id], (oldData: any) => {
+              if (!oldData) return oldData;
 
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page: any, index: number) =>
-                index === 0
-                  ? {
-                      ...page,
-                      data: {
-                        ...page.data,
-                        messages: page.data.messages.map((m: any) =>
-                          m.id === tempId ? returnedData : m,
-                        ),
-                      },
-                    }
-                  : page,
-              ),
-            };
-          });
-          if (socket) {
-            socket.emit('sendMessage', chat?.id);
-            setIsTyping(false);
-            socket.emit('stopTyping', { chatId: chat?.id, user: me });
-          }
-        },
-        onError: () => {
-          queryClient.setQueryData(['chats', chat?.id], (oldData: any) => {
-            if (!oldData) return oldData;
+              return {
+                ...oldData,
+                pages: oldData.pages.map((page: any, index: number) =>
+                  index === 0
+                    ? {
+                        ...page,
+                        data: {
+                          ...page.data,
+                          messages: page.data.messages.map((m: any) =>
+                            m.id === tempId ? returnedData : m,
+                          ),
+                        },
+                      }
+                    : page,
+                ),
+              };
+            });
+            if (socket) {
+              socket.emit('sendMessage', chat?.id);
+              setIsTyping(false);
+              socket.emit('stopTyping', { chatId: chat?.id, user: me });
+            }
+          },
+          onError: () => {
+            queryClient.setQueryData(['chats', chat?.id], (oldData: any) => {
+              if (!oldData) return oldData;
 
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page: any, index: number) =>
-                index === 0
-                  ? {
-                      ...page,
-                      data: {
-                        ...page.data,
-                        messages: page.data.messages.filter(
-                          (m: any) => m.id !== tempId,
-                        ),
-                      },
-                    }
-                  : page,
-              ),
-            };
-          });
-          toast.error(t('chats.errors.send'));
+              return {
+                ...oldData,
+                pages: oldData.pages.map((page: any, index: number) =>
+                  index === 0
+                    ? {
+                        ...page,
+                        data: {
+                          ...page.data,
+                          messages: page.data.messages.filter(
+                            (m: any) => m.id !== tempId,
+                          ),
+                        },
+                      }
+                    : page,
+                ),
+              };
+            });
+            toast.error(t('chats.errors.send'));
+          },
         },
-      },
-    );
+      );
+    }
   };
 
   const { isExpanded } = useMessagesSidebarStore();
-  const { mutate, isPending, isError } = useSendMessage();
+  const { mutate, isError } = useSendMessage();
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -352,13 +353,6 @@ export default function ChatView({ chat }) {
               <Send />
             </Button>
           </div>
-          {/* <p className="text-[12px] h-[14px]">
-            {typingUser && (
-              <>
-                {typingUser?.name} {t('general.pending.isTyping')}
-              </>
-            )}
-          </p> */}
         </div>
       </DataDisplay>
     </div>

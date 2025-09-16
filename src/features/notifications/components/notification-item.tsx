@@ -1,21 +1,21 @@
-import React from 'react';
 import useMarkAsRead from '../hooks/use-mark-as-read';
 import { queryClient } from '../../../lib/tanstackquery';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../shared/components/button';
+import type { Notification } from '../types/types';
 
-const NotificationItem = ({ notif }) => {
+const NotificationItem = ({ notif }: { notif: Notification }) => {
   const { t } = useTranslation();
-  const { mutate, isPending, isError } = useMarkAsRead();
+  const { mutate, isPending } = useMarkAsRead();
 
   const handleMark = () => {
     mutate(notif.documentId, {
-      onSuccess: (returnedData) => {
+      onSuccess: () => {
         toast.success(t('notifications.success.mark'));
         queryClient.invalidateQueries({ queryKey: ['notifications'] });
       },
-      onError: (err) => toast.error(t('notifications.errors.mark')),
+      onError: () => toast.error(t('notifications.errors.mark')),
     });
   };
 

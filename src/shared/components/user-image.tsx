@@ -9,10 +9,13 @@ import { useSocket } from '../../hooks/use-socket';
 import useSendNotification from '../../features/notifications/hooks/use-send-notification';
 
 interface UserImageProps {
+  id: number;
+  type: string; // e.g., 'employees' or 'managers'
   imageUrl: string | null;
   name: string;
-  updateMutation: UseMutationResult<any, Error, File>; // mutation with File input
-  deleteMutation: UseMutationResult<any, Error, void>; // mutation with no input
+  updateMutation?: UseMutationResult<any, Error, { id: number; file: File }>;
+  deleteMutation?: UseMutationResult<any, Error, number>;
+  viewOnly?: boolean;
 }
 
 const UserImage: React.FC<UserImageProps> = ({
@@ -30,7 +33,9 @@ const UserImage: React.FC<UserImageProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  // handle file selection
+  const { socket } = useSocket();
+  const { mutate: sendNotification } = useSendNotification();
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -41,35 +46,34 @@ const UserImage: React.FC<UserImageProps> = ({
     e.target.value = '';
   };
 
-  const { socket } = useSocket();
-  const { mutate: sendNotification } = useSendNotification();
+  const handleConfirmUpdate = () => {
+    if (!selectedFile) return;
 
-  const handleConfirmUpdate = async () => {
-    if (selectedFile) {
+    if (updateMutation) {
       updateMutation.mutate(
-        { id: id, file: selectedFile },
+        { id, file: selectedFile },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [type] });
             setShowUpdateModal(false);
             setSelectedFile(null);
             setPreviewUrl(null);
             toast.success(t('profile.success.imageUpdate'));
-            if (id && type === 'employees') {
+
+            if (type === 'employees') {
               sendNotification({
                 userId: id,
                 title: t('notifications.text.editHead'),
                 message: t('notifications.text.editDescription'),
               });
-              if (socket) {
-                socket.emit('sendNotification', {
-                  recipientId: id,
-                  data: {
-                    title: t('notifications.text.editHead'),
-                    message: t('notifications.text.editDescription'),
-                  },
-                });
-              }
+
+              socket?.emit('sendNotification', {
+                recipientId: id,
+                data: {
+                  title: t('notifications.text.editHead'),
+                  message: t('notifications.text.editDescription'),
+                },
+              });
             }
           },
           onError: () => {
@@ -80,37 +84,39 @@ const UserImage: React.FC<UserImageProps> = ({
     }
   };
 
-  const handleConfirmDelete = async () => {
-    deleteMutation.mutate(id, {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: [type] });
-        setShowDeleteModal(false);
-        toast.success(t('profile.success.imageDelete'));
-        sendNotification({
-          userId: id,
-          title: t('notifications.text.editHead'),
-          message: t('notifications.text.editDescription'),
-        });
-        if (socket) {
-          socket.emit('sendNotification', {
+  const handleConfirmDelete = () => {
+    if (deleteMutation) {
+      deleteMutation.mutate(id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [type] });
+          setShowDeleteModal(false);
+          toast.success(t('profile.success.imageDelete'));
+
+          sendNotification({
+            userId: id,
+            title: t('notifications.text.editHead'),
+            message: t('notifications.text.editDescription'),
+          });
+
+          socket?.emit('sendNotification', {
             recipientId: id,
             data: {
               title: t('notifications.text.editHead'),
               message: t('notifications.text.editDescription'),
             },
           });
-        }
-      },
-      onError: () => {
-        toast.error(t('profile.errors.imageDelete'));
-      },
-    });
+        },
+        onError: () => {
+          toast.error(t('profile.errors.imageDelete'));
+        },
+      });
+    }
   };
 
   return (
-    <div className="flex  items-center gap-4">
+    <div className="flex items-center gap-4">
       {/* Profile Image */}
-      <div className="w-[100px] h-[100px] rounded-level1 overflow-hidden bg-main text-second-background flex justify-center items-center font-bold text-[32px] ">
+      <div className="w-[100px] h-[100px] rounded-level1 overflow-hidden bg-main text-second-background flex justify-center items-center font-bold text-[32px]">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -118,7 +124,7 @@ const UserImage: React.FC<UserImageProps> = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center ">
+          <div className="w-full h-full flex items-center justify-center">
             {`${name.split(' ')[0][0]}${
               name.split(' ')[1]?.[0] ?? ''
             }`.toUpperCase()}
@@ -127,54 +133,47 @@ const UserImage: React.FC<UserImageProps> = ({
       </div>
 
       {!viewOnly && (
-        <>
-          {/* Action Buttons */}
-          <div className="flex gap-4 flex-col">
-            <Button
-              variant="inverse"
-              onClick={() => setShowDeleteModal(true)}
-              className=""
-              disabled={!imageUrl}>
-              {t('profile.text.deleteImage')}
-            </Button>
-            <Button type="label">
-              {t('profile.text.updateImage')}
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-            </Button>
-          </div>
+        <div className="flex gap-4 flex-col">
+          {/* Delete / Update Buttons */}
+          <Button
+            variant="inverse"
+            onClick={() => setShowDeleteModal(true)}
+            disabled={!imageUrl}>
+            {t('profile.text.deleteImage')}
+          </Button>
+          <Button type="label">
+            {t('profile.text.updateImage')}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </Button>
 
           {/* Delete Modal */}
           {showDeleteModal && (
             <Modal
               isOpen={showDeleteModal}
               onClose={() => setShowDeleteModal(false)}>
-              <div className="">
-                <h2 className="text-lg font-semibold mb-4">
-                  {t('profile.text.deleteImageHead')}
-                </h2>
-                <p className="mb-6">
-                  {t('profile.text.deleteImageDescription')}
-                </p>
-                <div className="flex justify-center gap-3 flex-col sm:flex-row">
-                  <Button
-                    onClick={() => setShowDeleteModal(false)}
-                    variant="inverse"
-                    disabled={deleteMutation.isPending}>
-                    {t('general.text.cancel')}
-                  </Button>
-                  <Button
-                    onClick={handleConfirmDelete}
-                    disabled={deleteMutation.isPending}>
-                    {deleteMutation.isPending
-                      ? t('general.pending.deleting')
-                      : t('general.text.delete')}
-                  </Button>
-                </div>
+              <h2 className="text-lg font-semibold mb-4">
+                {t('profile.text.deleteImageHead')}
+              </h2>
+              <p className="mb-6">{t('profile.text.deleteImageDescription')}</p>
+              <div className="flex justify-center gap-3 flex-col sm:flex-row">
+                <Button
+                  variant="inverse"
+                  onClick={() => setShowDeleteModal(false)}
+                  disabled={deleteMutation && deleteMutation.isPending}>
+                  {t('general.text.cancel')}
+                </Button>
+                <Button
+                  onClick={handleConfirmDelete}
+                  disabled={deleteMutation && deleteMutation.isPending}>
+                  {deleteMutation && deleteMutation.isPending
+                    ? t('general.pending.deleting')
+                    : t('general.text.delete')}
+                </Button>
               </div>
             </Modal>
           )}
@@ -182,46 +181,44 @@ const UserImage: React.FC<UserImageProps> = ({
           {/* Update Modal */}
           {showUpdateModal && previewUrl && (
             <Modal
-              isOpen={showUpdateModal && !!previewUrl}
+              isOpen={showUpdateModal}
               onClose={() => {
                 setShowUpdateModal(false);
                 setSelectedFile(null);
                 setPreviewUrl(null);
               }}>
-              <div className="flex flex-col items-center">
-                <h2 className="text-lg font-semibold mb-4">
-                  {t('profile.text.previewImage')}
-                </h2>
-                <div className="w-32 h-32 rounded-full overflow-hidden border mb-6">
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex gap-3 flex-col sm:flex-row">
-                  <Button
-                    variant="inverse"
-                    disabled={updateMutation.isPending}
-                    onClick={() => {
-                      setShowUpdateModal(false);
-                      setSelectedFile(null);
-                      setPreviewUrl(null);
-                    }}>
-                    {t('general.text.cancel')}
-                  </Button>
-                  <Button
-                    onClick={handleConfirmUpdate}
-                    disabled={updateMutation.isPending}>
-                    {updateMutation.isPending
-                      ? t('general.pending.confirming')
-                      : t('general.text.confirm')}
-                  </Button>
-                </div>
+              <h2 className="text-lg font-semibold mb-4">
+                {t('profile.text.previewImage')}
+              </h2>
+              <div className="w-32 h-32 rounded-full overflow-hidden border mb-6">
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex gap-3 flex-col sm:flex-row">
+                <Button
+                  variant="inverse"
+                  disabled={updateMutation && updateMutation.isPending}
+                  onClick={() => {
+                    setShowUpdateModal(false);
+                    setSelectedFile(null);
+                    setPreviewUrl(null);
+                  }}>
+                  {t('general.text.cancel')}
+                </Button>
+                <Button
+                  onClick={handleConfirmUpdate}
+                  disabled={updateMutation && updateMutation.isPending}>
+                  {updateMutation && updateMutation.isPending
+                    ? t('general.pending.confirming')
+                    : t('general.text.confirm')}
+                </Button>
               </div>
             </Modal>
           )}
-        </>
+        </div>
       )}
     </div>
   );

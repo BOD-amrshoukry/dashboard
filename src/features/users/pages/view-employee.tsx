@@ -16,32 +16,35 @@ import UserImage from '../../../shared/components/user-image';
 import { BASE_URL } from '../../../shared/constants/api';
 import EmployeeTickets from '../components/employee-tickets';
 import EmployeeStats from '../components/employee-stats';
+import type { ModalDataType } from '../../../shared/types/modal';
 
 const ViewEmployeePage = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, isError, isPending: isLoading, refetch } = useGetEmployee(id);
+  const {
+    data,
+    isError,
+    isPending: isLoading,
+    refetch,
+  } = useGetEmployee(Number(id));
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalDataType>();
 
-  const {
-    mutate: deleteEmployeeMutate,
-    isPending: isPendingDeleteEmployee,
-    isError: isErrorDeleteEmployee,
-  } = useDeleteEmployee();
+  const { mutate: deleteEmployeeMutate, isPending: isPendingDeleteEmployee } =
+    useDeleteEmployee();
 
   const handleSubmit = () => {
-    deleteEmployeeMutate(id, {
-      onSuccess: (returnedData) => {
+    deleteEmployeeMutate(Number(id), {
+      onSuccess: () => {
         toast.success(t('users.success.deletedOneEmployee'));
         queryClient.invalidateQueries({ queryKey: ['employees'] });
         setIsOpenModal(false);
         navigate(`/employees`);
       },
-      onError: (err) => toast.error(t('users.errors.deletedOneEmployee')),
+      onError: () => toast.error(t('users.errors.deletedOneEmployee')),
     });
   };
 
@@ -72,7 +75,7 @@ const ViewEmployeePage = () => {
               <Pencil />
             </PageAction>
             <PageAction
-              href={false}
+              href={undefined}
               onClick={() => {
                 setModalData({
                   head: t('users.text.deleteHead'),
@@ -115,6 +118,7 @@ const ViewEmployeePage = () => {
 
         <div className="mb-[32px]">
           <UserImage
+            type=""
             viewOnly={true}
             imageUrl={
               data?.image?.formats
@@ -122,7 +126,7 @@ const ViewEmployeePage = () => {
                 : null
             }
             name={data?.name}
-            id={id}
+            id={Number(id)}
           />
         </div>
 
@@ -158,7 +162,7 @@ const ViewEmployeePage = () => {
         <EmployeeTickets data={data} />
 
         <div className="mt-[32px]">
-          <EmployeeStats />
+          <EmployeeStats userId={Number(id)} />
         </div>
       </DataDisplay>
     </>

@@ -4,11 +4,12 @@ import Plans from '../components/plans';
 import PageHead from '../../../shared/components/page-head';
 import { useState } from 'react';
 import BraintreeCheckout from '../components/braintree';
+import type { Plan } from '../types/types';
 
 const PlansPage = () => {
   const { t } = useTranslation();
   const data = [{ label: t('navbar.text.plans'), href: '/plans' }];
-  const [plan, setPlan] = useState(null);
+  const [plan, setPlan] = useState<Plan | null>(null);
 
   return (
     <>

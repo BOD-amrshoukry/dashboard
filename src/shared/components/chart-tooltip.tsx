@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tooltip } from 'recharts';
 
 const ChartTooltip = () => {
@@ -21,3 +20,4 @@ const ChartTooltip = () => {
 };
 
 export default ChartTooltip;
+

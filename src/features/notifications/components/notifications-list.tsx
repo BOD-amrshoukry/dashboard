@@ -3,17 +3,9 @@ import Button from '../../../shared/components/button';
 import useGetNotifications from '../hooks/use-get-notifications';
 import Loading from '../../../shared/components/loading';
 import { t } from 'i18next';
-import useMarkAsRead from '../hooks/use-mark-as-read';
 import NotificationItem from './notification-item';
 import DataDisplay from '../../../shared/components/data-display';
-
-interface Notification {
-  id: number;
-  head: string;
-  description: string;
-  isRead: boolean;
-  createdAt: string;
-}
+import type { Notification } from '../types/types';
 
 interface NotificationsListProps {
   userId: number;
@@ -29,8 +21,7 @@ const NotificationsList: React.FC<NotificationsListProps> = ({ userId }) => {
     pageSize: pageSize,
   };
 
-  const { data, isPending, isError, isFetching, refetch } =
-    useGetNotifications(params);
+  const { data, isPending, isFetching, refetch } = useGetNotifications(params);
 
   const notifications: Notification[] = data?.data || [];
 
@@ -45,8 +36,8 @@ const NotificationsList: React.FC<NotificationsListProps> = ({ userId }) => {
       <div className="space-y-4 relative">
         {notifications.length === 0 && <p>{t('notifications.errors.zero')}</p>}
 
-        {notifications.map((notif) => (
-          <NotificationItem key={notif.id} notif={notif} />
+        {notifications.map((notif: Notification) => (
+          <NotificationItem key={notif?.id} notif={notif} />
         ))}
 
         {isFetching && (

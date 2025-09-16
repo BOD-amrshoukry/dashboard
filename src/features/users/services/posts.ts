@@ -1,15 +1,15 @@
 import api from '../../../lib/axios';
 import { generateRandomPassword } from '../../../shared/utils/auth';
 
-export const deleteManager = (id) => {
+export const deleteManager = (id: number) => {
   return api.delete(`/users/${id}`).then((res) => res.data);
 };
 
-export const deleteEmployee = (id) => {
+export const deleteEmployee = (id: number) => {
   return api.delete(`/users/${id}`).then((res) => res.data);
 };
 
-export const deleteManagers = (ids) => {
+export const deleteManagers = (ids: number[]) => {
   return api
     .post(`/users/delete-many`, {
       userIds: ids,
@@ -17,7 +17,7 @@ export const deleteManagers = (ids) => {
     .then((res) => res.data);
 };
 
-export const deleteEmployees = (ids) => {
+export const deleteEmployees = (ids: number[]) => {
   return api
     .post(`/users/delete-many`, {
       userIds: ids,
@@ -25,7 +25,12 @@ export const deleteEmployees = (ids) => {
     .then((res) => res.data);
 };
 
-export const createEmployee = (data) => {
+export const createEmployee = (data: {
+  name: string;
+  username: string;
+  email: string;
+  type: string;
+}) => {
   return api
     .post('/auth/local/register', {
       name: data?.name,
@@ -37,7 +42,12 @@ export const createEmployee = (data) => {
     .then((res) => res.data);
 };
 
-export const createManager = (data) => {
+export const createManager = (data: {
+  name: string;
+  username: string;
+  email: string;
+  type: string;
+}) => {
   return api
     .post('/auth/local/register', {
       name: data?.name,
@@ -49,15 +59,25 @@ export const createManager = (data) => {
     .then((res) => res.data);
 };
 
-export const editEmployee = (id, data) => {
+export const editEmployee = (
+  id: number,
+  data: {
+    name: string;
+  },
+) => {
   return api.put(`/users/${id}`, data).then((res) => res.data);
 };
 
-export const editManager = (id, data) => {
+export const editManager = (
+  id: number,
+  data: {
+    name: string;
+  },
+) => {
   return api.put(`/users/${id}`, data).then((res) => res.data);
 };
 
-export const updateUserImage = async (id, file: File) => {
+export const updateUserImage = async (id: number, file: File) => {
   // Step 1: prepare formData
   const formData = new FormData();
   formData.append('files', file);
@@ -79,7 +99,7 @@ export const updateUserImage = async (id, file: File) => {
   return updateRes.data;
 };
 
-export const deleteUserImage = (id) => {
+export const deleteUserImage = (id: number) => {
   return api.put(`/users/${id}`, { image: null }).then((res) => res.data);
 };
 

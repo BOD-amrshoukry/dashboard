@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { FieldErrors } from 'react-hook-form';
 import Input from '../../../shared/components/input';
 import Button from '../../../shared/components/button';
-import Select from '../../../shared/components/select';
-import PaginatedDatalist from '../../../shared/components/paginated-datalist';
-import { getEmployees } from '../../users/services/get';
 import type { ManagerFormData } from '../schemas/manager-schema';
 import useManagerSchema from '../schemas/manager-schema';
 
@@ -17,6 +14,7 @@ interface ManagerFormProps {
   onInvalid?: (errors: FieldErrors) => void;
   isPending?: boolean;
   submitLabel?: string;
+  type: 'new' | 'edit';
 }
 
 const ManagerForm: React.FC<ManagerFormProps> = ({
@@ -32,7 +30,6 @@ const ManagerForm: React.FC<ManagerFormProps> = ({
   const {
     register,
     handleSubmit,
-    control,
     watch,
     formState: { errors, isDirty },
   } = useForm<ManagerFormData>({

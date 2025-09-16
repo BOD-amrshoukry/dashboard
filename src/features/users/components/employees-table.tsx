@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import type { Column } from '../../tables/types/table';
 import type { User } from '../types/type';
 import { BASE_URL } from '../../../shared/constants/api';
 import { useState } from 'react';
@@ -13,6 +12,8 @@ import { ReusableTable } from '../../../shared/components/table';
 import { getEmployees } from '../services/get';
 import Modal from '../../../shared/components/modal';
 import Button from '../../../shared/components/button';
+import type { Column } from '../../../shared/types/table';
+import type { ModalDataType } from '../../../shared/types/modal';
 
 export default function EmployeesTable() {
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ export default function EmployeesTable() {
   ];
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalDataType>();
 
   const rowActions = [
     {

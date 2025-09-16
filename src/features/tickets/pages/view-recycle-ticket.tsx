@@ -15,6 +15,7 @@ import { queryClient } from '../../../lib/tanstackquery';
 import useHardDeleteTicket from '../hooks/use-hard-delete-ticket';
 import useSendNotification from '../../notifications/hooks/use-send-notification';
 import { useSocket } from '../../../hooks/use-socket';
+import type { ModalDataType } from '../../../shared/types/modal';
 
 const ViewRecycleTicket = () => {
   const { t } = useTranslation();
@@ -26,21 +27,17 @@ const ViewRecycleTicket = () => {
     isError,
     isPending: isLoading,
     refetch,
-  } = useGetRecycledTicket(id);
+  } = useGetRecycledTicket(String(id));
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<ModalDataType>();
 
   const {
     mutate: hardDeleteTicketMutate,
     isPending: isPendingHardDeleteTicket,
-    isError: isErrorHardDeleteTicket,
   } = useHardDeleteTicket();
 
-  const {
-    mutate: restoreTicketMutate,
-    isPending: isPendingRestoreTicket,
-    isError: isErrorRestoreTicket,
-  } = useRestoreTicket();
+  const { mutate: restoreTicketMutate, isPending: isPendingRestoreTicket } =
+    useRestoreTicket();
 
   const isPendingCondition =
     isPendingHardDeleteTicket || isPendingRestoreTicket;
@@ -50,8 +47,8 @@ const ViewRecycleTicket = () => {
 
   const handleSubmit = () => {
     if (modalData?.action === 'delete') {
-      hardDeleteTicketMutate(modalData?.id, {
-        onSuccess: (returnedData) => {
+      hardDeleteTicketMutate(String(modalData?.id), {
+        onSuccess: () => {
           toast.success(t('tickets.success.hardDeletedOne'));
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           setIsOpenModal(false);
@@ -78,11 +75,11 @@ const ViewRecycleTicket = () => {
             }
           }
         },
-        onError: (err) => toast.error(t('tickets.errors.hardDeletedOne')),
+        onError: () => toast.error(t('tickets.errors.hardDeletedOne')),
       });
     } else {
-      restoreTicketMutate(modalData?.id, {
-        onSuccess: (returnedData) => {
+      restoreTicketMutate(String(modalData?.id), {
+        onSuccess: () => {
           toast.success(t('tickets.success.restore'));
           queryClient.invalidateQueries({ queryKey: ['tickets'] });
           setIsOpenModal(false);
@@ -108,7 +105,7 @@ const ViewRecycleTicket = () => {
             }
           }
         },
-        onError: (err) => toast.error(t('tickets.errors.restore')),
+        onError: () => toast.error(t('tickets.errors.restore')),
       });
     }
   };
@@ -141,7 +138,7 @@ const ViewRecycleTicket = () => {
           />
           <div className="flex items-center gap-[16px]">
             <PageAction
-              href={false}
+              href={undefined}
               onClick={() => {
                 setModalData({
                   head: t('tickets.text.deleteHardHead'),
@@ -158,7 +155,7 @@ const ViewRecycleTicket = () => {
               <Trash2 />
             </PageAction>
             <PageAction
-              href={false}
+              href={undefined}
               onClick={() => {
                 setModalData({
                   head: t('tickets.text.restoreHead'),

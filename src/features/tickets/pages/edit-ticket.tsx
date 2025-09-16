@@ -19,7 +19,12 @@ const EditTicketPage = () => {
 
   console.log('id', id);
 
-  const { data, isError, isPending: isLoading, refetch } = useGetTicket(id);
+  const {
+    data,
+    isError,
+    isPending: isLoading,
+    refetch,
+  } = useGetTicket(String(id));
   const { mutate: sendNotification } = useSendNotification();
   const { socket } = useSocket();
 
@@ -102,9 +107,7 @@ const EditTicketPage = () => {
     );
   };
 
-  const onInvalid = (error) => {
-    console.log(error);
-  };
+  const onInvalid = () => {};
 
   const defaultValues = {
     name: data?.data?.name,

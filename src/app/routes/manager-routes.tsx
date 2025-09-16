@@ -1,5 +1,4 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { decodeJwt, getCookie } from '../../shared/utils/auth';
 import Loading from '../../shared/components/loading';
 import useUser from '../../shared/hooks/use-user';
 

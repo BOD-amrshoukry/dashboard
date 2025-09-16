@@ -14,9 +14,11 @@ import useUser from '../../../shared/hooks/use-user';
 interface TicketFormProps {
   defaultValues?: Partial<TicketFormData>;
   onSubmit: (data: TicketFormData) => void;
-  onInvalid?: (errors: FieldErrors) => void;
+  onInvalid?: (errors: FieldErrors<TicketFormData>) => void;
   isPending?: boolean;
   submitLabel?: string;
+  userValue?: any; // type according to PaginatedDatalist value
+  type?: 'new' | 'edit';
 }
 
 const TicketForm: React.FC<TicketFormProps> = ({

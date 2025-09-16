@@ -2,7 +2,6 @@ import { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import type { FieldErrors } from 'react-hook-form';
-import Input from './input';
 import { useTranslation } from 'react-i18next';
 
 interface Option {

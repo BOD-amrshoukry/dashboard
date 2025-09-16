@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useEffect, useState } from 'react';
 import { socket } from '../lib/socket';
 
 interface Notification {
@@ -8,7 +7,7 @@ interface Notification {
 }
 
 export const useSocket = () => {
-  const [connected, setConnected] = useState(false);
+  const [connected] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {

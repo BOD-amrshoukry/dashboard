@@ -3,7 +3,8 @@ import { assignTickets } from '../services/posts';
 
 const useAssignTickets = () => {
   return useMutation({
-    mutationFn: ({ ids, userId }) => assignTickets(ids, userId),
+    mutationFn: ({ ids, userId }: { ids: string[]; userId: number }) =>
+      assignTickets(ids, userId),
   });
 };
 

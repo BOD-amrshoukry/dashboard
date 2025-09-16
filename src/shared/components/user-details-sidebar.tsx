@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { deleteCookie } from '../utils/auth';
@@ -9,23 +9,34 @@ import { BASE_URL } from '../constants/api';
 import { queryClient } from '../../lib/tanstackquery';
 import useClearPushToken from '../hooks/use-clear-push-token';
 
-const UserDetailsSidebar = ({ isMobile }) => {
+interface UserDetailsSidebarProps {
+  isMobile?: boolean;
+}
+
+interface PopupPos {
+  bottom: number;
+  left: number;
+}
+
+const UserDetailsSidebar: React.FC<UserDetailsSidebarProps> = ({
+  isMobile = false,
+}) => {
   const [popupOpen, setPopupOpen] = useState(false);
-  const [popupPos, setPopupPos] = useState({ bottom: 0, left: 0 });
-  const triggerRef = useRef(null);
-  const popupRef = useRef(null);
+  const [popupPos, setPopupPos] = useState<PopupPos>({ bottom: 0, left: 0 });
+  const triggerRef = useRef<HTMLDivElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
   const navigate = useNavigate();
 
   // Close popup if clicked outside
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = (e: MouseEvent | globalThis.MouseEvent) => {
       if (
         triggerRef.current &&
-        !triggerRef.current.contains(e.target) &&
+        !triggerRef.current.contains(e.target as Node) &&
         popupRef.current &&
-        !popupRef.current.contains(e.target) &&
+        !popupRef.current.contains(e.target as Node) &&
         popupOpen
       ) {
         setPopupOpen(false);
@@ -34,7 +45,8 @@ const UserDetailsSidebar = ({ isMobile }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [popupOpen]);
-  const handleOpenPopup = (e) => {
+
+  const handleOpenPopup = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setPopupPos({
       bottom: isMobile ? rect.height : 16, // small offset below the element
@@ -82,7 +94,7 @@ const UserDetailsSidebar = ({ isMobile }) => {
                   <div className="w-full h-full flex items-center justify-center ">
                     {`${data?.name?.split(' ')[0]?.[0]?.toUpperCase() ?? ''}${
                       data?.name?.split(' ')[1]?.[0]?.toUpperCase() ?? ''
-                    }`}{' '}
+                    }`}
                   </div>
                 )}
               </div>
@@ -102,7 +114,7 @@ const UserDetailsSidebar = ({ isMobile }) => {
         createPortal(
           <div
             ref={popupRef} // <-- attach ref here
-            className="absolute z-[99999] bg-second-background shadow-lg  border border-main-background w-[60] rounded-level1"
+            className="absolute z-[99999] bg-second-background shadow-lg border border-main-background w-[60] rounded-level1"
             style={{
               bottom: popupPos.bottom,
               ...(isRTL ? { right: popupPos.left } : { left: popupPos.left }),
@@ -124,7 +136,7 @@ const UserDetailsSidebar = ({ isMobile }) => {
                     <div className="w-full h-full flex items-center justify-center ">
                       {`${data?.name?.split(' ')[0]?.[0]?.toUpperCase() ?? ''}${
                         data?.name?.split(' ')[1]?.[0]?.toUpperCase() ?? ''
-                      }`}{' '}
+                      }`}
                     </div>
                   )}
                 </div>

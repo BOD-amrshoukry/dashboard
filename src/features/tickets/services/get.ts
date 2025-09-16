@@ -1,5 +1,5 @@
 import api from '../../../lib/axios';
-import type { FetchParams, FetchResult } from '../../tables/types/table';
+import type { FetchParams, FetchResult } from '../../../shared/types/table';
 import type { Ticket } from '../types/type';
 
 export async function fetchTickets(

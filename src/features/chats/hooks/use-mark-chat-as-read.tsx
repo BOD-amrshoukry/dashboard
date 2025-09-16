@@ -3,7 +3,7 @@ import { markChatAsRead } from '../services/posts';
 
 const useMarkChatAsRead = () => {
   return useMutation({
-    mutationFn: (id) => markChatAsRead(id),
+    mutationFn: (id: number) => markChatAsRead(id),
   });
 };
 

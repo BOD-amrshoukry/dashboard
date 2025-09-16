@@ -1,7 +1,12 @@
 import clsx from 'clsx';
 import React from 'react';
 
-const PageHead = ({ head, size = 'normal' }) => {
+interface PageHeadProps {
+  head: string;
+  size?: 'sm' | 'normal';
+}
+
+const PageHead: React.FC<PageHeadProps> = ({ head, size = 'normal' }) => {
   return (
     <h2
       className={clsx(

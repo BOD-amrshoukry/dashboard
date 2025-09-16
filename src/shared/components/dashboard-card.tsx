@@ -1,7 +1,15 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { type ReactNode } from 'react';
 
-const DashboardCard = ({ children, className }) => {
+interface DashboardCardProps {
+  children: ReactNode;
+  className?: string;
+}
+
+const DashboardCard: React.FC<DashboardCardProps> = ({
+  children,
+  className,
+}) => {
   return (
     <div
       className={clsx(

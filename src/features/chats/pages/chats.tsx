@@ -2,46 +2,34 @@ import { useTranslation } from 'react-i18next';
 import DashboardTopBar from '../../../shared/layouts/dashboard-top-bar';
 import ChatSidebar from '../components/sidebar';
 import ChatView from '../components/chat-view';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import useMessagesSidebarStore from '../store/use-chat-sidebar';
 import useMarkAllChatsAsRead from '../hooks/use-mark-all-chats-as-read';
 import toast from 'react-hot-toast';
 import { queryClient } from '../../../lib/tanstackquery';
 import useGetUnreadAllCountChats from '../hooks/use-get-unread-all-count';
+import type { Chat } from '../types/types';
 
 const ChatsPage = () => {
   const { t } = useTranslation();
   const breadCrumb = [{ label: t('navbar.text.chats'), href: '/chats' }];
 
-  const [activeChat, setActiveChat] = useState(null);
-  const { isExpanded, toggleSidebar } = useMessagesSidebarStore();
-  const [typingUsers, setTypingUsers] = useState([]);
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const { toggleSidebar } = useMessagesSidebarStore();
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
+  const { mutate, isPending } = useMarkAllChatsAsRead();
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1280);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const { mutate, isPending, isError } = useMarkAllChatsAsRead();
-
-  const {
-    data: chatsCount,
-    isError: isErrorChatsCount,
-    isPending: isPendingChatsCount,
-  } = useGetUnreadAllCountChats();
+  const { data: chatsCount } = useGetUnreadAllCountChats();
 
   const handleMarking = () => {
     mutate(undefined, {
-      onSuccess: (returnedData) => {
+      onSuccess: () => {
         toast.success(t('chats.success.markAll'));
 
         queryClient.invalidateQueries({ queryKey: ['chats'] });
       },
-      onError: (err) => toast.error(t('chats.errors.markAll')),
+      onError: () => toast.error(t('chats.errors.markAll')),
     });
   };
 
