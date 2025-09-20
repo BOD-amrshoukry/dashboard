@@ -12,7 +12,10 @@ interface PlanInterface {
 
 const Plans: FC<PlanInterface> = ({ setPlan }) => {
   const { t, i18n } = useTranslation();
-  const { data, isError, isPending, refetch } = useGetPlans(i18n.language);
+  const locale = localStorage.getItem('lang')?.split('-')[0] || 'en';
+  const { data, isError, isPending, refetch } = useGetPlans(String(locale));
+
+  console.log('data', data);
 
   return (
     <DataDisplay

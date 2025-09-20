@@ -125,8 +125,8 @@ const UserImage: React.FC<UserImageProps> = ({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            {`${name.split(' ')[0][0]}${
-              name.split(' ')[1]?.[0] ?? ''
+            {`${name?.split(' ')[0][0]}${
+              name?.split(' ')[1]?.[0] ?? ''
             }`.toUpperCase()}
           </div>
         )}
