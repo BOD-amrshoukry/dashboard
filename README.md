@@ -4,7 +4,7 @@ A comprehensive **ticketing system dashboard** built with React, providing role-
 
 ---
 
-To access the **Ticketing System Dashboard**, use the following credentials:
+To access the **Ticketing System Dashboard**, use the following credentials
 
 - Email: owner@gmail.com
 - Password: 1234567

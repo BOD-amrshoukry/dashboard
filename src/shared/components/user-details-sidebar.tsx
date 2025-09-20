@@ -114,7 +114,7 @@ const UserDetailsSidebar: React.FC<UserDetailsSidebarProps> = ({
         createPortal(
           <div
             ref={popupRef} // <-- attach ref here
-            className="absolute z-[99999] bg-second-background shadow-lg border border-main-background w-[60] rounded-level1"
+            className="fixed z-[99999] bg-second-background shadow-lg border border-main-background w-[60] rounded-level1"
             style={{
               bottom: popupPos.bottom,
               ...(isRTL ? { right: popupPos.left } : { left: popupPos.left }),
